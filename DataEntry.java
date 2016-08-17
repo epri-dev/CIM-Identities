@@ -37,77 +37,17 @@ public class DataEntry extends javax.swing.JFrame {
         initComponents();
     }
     
+    //Populate Combobox with previous entries
     public void connect(String column, String table){
         try{
-            Connection con = DriverManager.getConnection(host, uName, uPass);
-            
+            Connection con = DriverManager.getConnection(host, uName, uPass);           
             Statement stmt = con.createStatement();
-            
-            if(enterPressed == true){
-                //Data Entry
-                if (uuidEntered == false){
-                    String genUUID = "INSERT INTO public.\"Identity\"(id_pkey, entry)"
-                            + "VALUES (DEFAULT, DEFAULT)";
-                    System.out.println(genUUID);
-                    stmt.executeUpdate(genUUID);
-                    String getUUID = "SELECT id.id_pkey FROM \"Identity\" id "
-                            + "ORDER BY id.entry desc LIMIT 1";
-                    Statement UUIDtext = con.createStatement();
-                    ResultSet uuidRS = UUIDtext.executeQuery(getUUID);
-                    uuidRS.next();
-                    newUUID = uuidRS.getString("id_pkey");
-               
-                    System.out.println("Generate UUID selected: " + newUUID);
-                }
-                else if(uuidEntered == true){
-                    newUUID = enter_uuidBox.getText();
-                    String entUUID = "INSERT INTO public.\"Identity\"(id_pkey, entry)"
-                            + "VALUES ('" + newUUID + "', DEFAULT)";
-                    stmt.executeUpdate(entUUID);
-                
-                    System.out.println("Enter UUID selected" + newUUID);
-                }
-                //Move Data to Database
-                //SQL strings
-                String insertIDObj = "INSERT INTO public.\"IdentifiedObject\"(io_pkey)"
-                        + "VALUES ('" + newUUID + "')";
-                String insertName = "INSERT INTO public.\"Name\"(n_pkey, n_name)"
-                        + "VALUES ('" + newUUID + "', '" + n_nameNew + "')";
-                String insertNT = "INSERT INTO public.\"NameType\"(nt_pkey, nt_description, nt_name)"
-                        + "VALUES ('" + newUUID + "', '" + nt_desNew + "', '" + nt_nameNew + "')";
-                String insertNTA = "INSERT INTO public.\"NameTypeAuthority\"(nta_pkey, nta_name, nta_description)"
-                        + "VALUES ('" + newUUID + "', '" + nta_nameNew + "', '" + nta_desNew + "')";
 
-            
-                //SQL updates
-                stmt.executeUpdate(insertIDObj);
-                stmt.executeUpdate(insertName);
-                stmt.executeUpdate(insertNT);
-                stmt.executeUpdate(insertNTA);
-            
-                n_name.addItem(n_nameNew);
-                nt_namecb.addItem(nt_nameNew);
-                nt_descb.addItem(nt_desNew);
-                nta_namecb.addItem(nta_nameNew);
-                nta_descb.addItem(nta_desNew);
-            
-                n_nameBox.setText("");
-                nt_nameBox.setText("");
-                nt_desBox.setText("");
-                nta_nameBox.setText("");
-                nta_desBox.setText("");
-                enter_uuidBox.setText("");
-                
-            }
-            else if(enterPressed == false){
-                //Populate Combobox with previous entries
-                String getData = "SELECT DISTINCT " + column + " FROM " + table;
+            String getData = "SELECT DISTINCT " + column + " FROM " + table;
 
-                ResultSet dataSet = stmt.executeQuery(getData);
-                while(dataSet.next()){
-                    forCombo.add(dataSet.getString(column));
-                }
-               
+            ResultSet dataSet = stmt.executeQuery(getData);
+            while(dataSet.next()){
+                forCombo.add(dataSet.getString(column));
             }
 
         }
@@ -115,6 +55,56 @@ public class DataEntry extends javax.swing.JFrame {
         catch(SQLException err){
             System.out.println(err.getMessage());
         }
+    }
+    //Send text entered to SQL database
+    public void sendToDB(String n_nameNew, String nt_nameNew, String nt_desNew, String nta_nameNew, String nta_desNew){
+        
+        try{
+            Connection con = DriverManager.getConnection(host, uName, uPass);
+            Statement stmt = con.createStatement();
+        
+            if(uuidEntered ==false){
+            
+                String genUUID = "INSERT INTO public.\"Identity\" (id_pkey, entry)"
+                        + "VALUES (DEFAULT, DEFAULT)";
+                stmt.executeUpdate(genUUID);
+                String getUUID = "SELECT id.id_pkey FROM \"Identity\" id "
+                        + "ORDER BY id.entry desc LIMIT 1";
+                ResultSet rs = stmt.executeQuery(getUUID);
+                rs.next();
+                newUUID = rs.getString("id_pkey");
+            
+                System.out.println("Generate UUID selected: " + newUUID);
+            }
+        
+            else if (uuidEntered == true){
+                newUUID = enter_uuidBox.getText();
+                String entUUID = "INSERT INTO public.\"Identity\"(id_pkey, entry)"
+                        + "VALUES ('" + newUUID + "', DEFAULT)";
+                stmt.executeUpdate(entUUID);
+            }
+        
+            String insertIDObj = "INSERT INTO public.\"IdentifiedObject\"(io_pkey)"
+                    + "VALUES('" + newUUID + "')";
+            String insertName = "INSERT INTO public.\"Name\"(n_pkey, n_name)"
+                    + "VALUES('" + newUUID + "', '" + n_nameNew + "')";
+            String insertNT = "INSERT INTO public.\"NameType\"(nt_pkey, nt_description, nt_name)"
+                    + "VALUES ('" + newUUID + "', '" + nt_desNew + "', '" + nt_nameNew + "')";
+            String insertNTA = "INSERT INTO public.\"NameTypeAuthority\"(nta_pkey, nta_name, nta_description)"
+                    + "VALUES ('" + newUUID + "', '" + nta_nameNew + "', '" + nta_desNew + "')";
+        
+            stmt.executeUpdate(insertIDObj);
+            stmt.executeUpdate(insertName);
+            stmt.executeUpdate(insertNT);
+            stmt.executeUpdate(insertNTA);
+            
+            stmt.close();
+            con.close();
+        }
+        catch(SQLException err){
+            System.out.println(err.getMessage());
+        }
+
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -432,7 +422,6 @@ public class DataEntry extends javax.swing.JFrame {
 
     private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
         // TODO add your handling code here:
-        enterPressed = true;
         
         n_nameNew = n_nameBox.getText();
         nt_nameNew = nt_nameBox.getText();
@@ -440,15 +429,13 @@ public class DataEntry extends javax.swing.JFrame {
         nta_nameNew = nta_nameBox.getText();
         nta_desNew = nta_desBox.getText();
       
-        if(gen_uuidSel.isSelected()){
-            uuidEntered = false;
-        }
-        else if(enter_uuidSel.isSelected()){
-            uuidEntered = true;
-        }
-        connect("","");
+        sendToDB(n_nameNew, nt_nameNew, nt_desNew, nta_nameNew, nta_desNew);
         
-        enterPressed = false;
+        n_nameBox.setText("");
+        nt_nameBox.setText("");
+        nt_desBox.setText("");
+        nta_nameBox.setText("");
+        nta_desBox.setText("");
     }//GEN-LAST:event_enterButtonActionPerformed
 
     private void nt_nameBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nt_nameBoxActionPerformed
