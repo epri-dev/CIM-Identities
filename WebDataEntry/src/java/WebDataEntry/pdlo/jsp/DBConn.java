@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 /**
  *
@@ -22,6 +23,7 @@ public class DBConn {
     String password = "epri97!!";
     boolean uuidEntered = false;
     boolean enterPressed = false;
+    public ArrayList<String> forCombo = new ArrayList<>();
     
     String n_nameNew = "";
     String nt_nameNew = "";
@@ -41,6 +43,27 @@ public class DBConn {
             err.printStackTrace();
         }
     
+    }
+    public void connect(String column, String table){
+        try{
+            
+           // Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection(host, uName, password);           
+            Statement stmt = con.createStatement();
+
+            String getData = "SELECT DISTINCT " + column + " FROM " + table +
+                    " ORDER BY " + column;
+
+            ResultSet dataSet = stmt.executeQuery(getData);
+            while(dataSet.next()){
+                forCombo.add(dataSet.getString(column));
+            }
+
+        }
+            
+        catch(SQLException err){
+            System.out.println(err.getMessage());
+        }
     }
     
     public int sendToDB(String n_nameNew, String nt_nameNew, String nt_desNew, String nta_nameNew, String nta_desNew, String uuidBox, boolean uuidEntered){
