@@ -17,6 +17,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Enter Data for CIM</title>
+        <link rel="stylesheet" type="text/css" href="dEntry.css">
         
          <%
             int result = 0;
@@ -66,18 +67,25 @@
 
                 %>
     </head>
-    <body onLoad="displayResults()" style="background-color: lightblue">
-        <h1>Enter Data for CIM</h1>
+    <body onLoad="displayResults()">
+        <fieldset style="background-color: #90EE90">
+        <h1>Enter Data for CIM Database </h1>
+        </fieldset>
         <form name="myForm" action="index.jsp" method="POST">
          <fieldset>
+             <legend><strong>Name:</strong></legend>
              Name <br>
-                 <input type="text" name="n_nameBox">
-                 <select name="n_name">
+                 <input class="des" type="text" name="n_nameBox" id="n_nameBox" placeholder="Name">
+                 <select name="n_name" onchange="chooseName(this)">
+                     <option value=""></option>
                     <%
                     DBConn getData = new DBConn();
                         
                     getData.connect("n_name", "\"Name\"");
                     for (int i = 0; i < getData.forCombo.size(); i ++) {
+                        if (getData.forCombo.get(i).trim().length() == 0) {
+                            continue;
+                        }   
                         %><option value="<%
                         out.println(getData.forCombo.get(i)); %>
                         "><%
@@ -87,16 +95,21 @@
                     getData.forCombo.clear();
 
                     %>
+                    
                 </select>
         </fieldset>
         <fieldset>
-            Name Type<br><br>
+            <legend><strong>Name Type:</strong></legend>
             Name<br>
-            <input type="text" name="nt_nameBox">
-            <select name="nt_name">
+            <input type="text" name="nt_nameBox" id="nt_nameBox" placeholder="Name">
+            <select name="nt_name" onchange="chooseNameType(this)">
+                <option value=""></option>
                 <%    
                     getData.connect("nt_name", "\"NameType\"");
                     for (int i = 0; i < getData.forCombo.size(); i ++) {
+                        if (getData.forCombo.get(i).trim().length() == 0) {
+                            continue;
+                        }
                         %><option value="<%
                         out.println(getData.forCombo.get(i)); %>
                         "><%
@@ -108,11 +121,15 @@
                     %>
             </select><br><br>
             Description<br>
-            <input type="text" name="nt_desBox">
-            <select name="nt_des">
+            <input type="text" name="nt_desBox" id="nt_desBox" placeholder="Description">
+            <select name="nt_des" onchange="chooseNTDes(this)">
+                <option value=""></option>
                  <%    
                     getData.connect("nt_description", "\"NameType\"");
                     for (int i = 0; i < getData.forCombo.size(); i ++) {
+                        if (getData.forCombo.get(i).trim().length() == 0) {
+                            continue;
+                        }
                         %><option value="<%
                         out.println(getData.forCombo.get(i)); %>
                         "><%
@@ -125,13 +142,17 @@
             </select><br>
         </fieldset>
         <fieldset>
-                Name Type Authority<br><br>
+            <legend><strong>Name Type Authority:</strong></legend>
                 Name<br>
-                <input type="text" name="nta_nameBox">
-                <select name="nta_name">
+                <input type="text" name="nta_nameBox" id="nta_nameBox" placeholder="Name">
+                <select name="nta_name" onchange="chooseNTA(this)">
+                    <option value=""></option>
                     <%    
                     getData.connect("nta_name", "\"NameTypeAuthority\"");
                     for (int i = 0; i < getData.forCombo.size(); i ++) {
+                        if (getData.forCombo.get(i).trim().length() == 0) {
+                            continue;
+                        }
                         %><option value="<%
                         out.println(getData.forCombo.get(i)); %>
                         "><%
@@ -143,11 +164,15 @@
                     %>
                 </select><br><br>
                 Description<br>
-                <input type="text" name="nta_desBox">
-                <select name="nta_des">
+                <input type="text" name="nta_desBox" id="nta_desBox" placeholder="Description">
+                <select name="nta_des" onchange="chooseNTADes(this)">
+                    <option value=""></option>
                     <%    
                     getData.connect("nta_description", "\"NameTypeAuthority\"");
                     for (int i = 0; i < getData.forCombo.size(); i ++) {
+                        if (getData.forCombo.get(i).trim().length() == 0) {
+                            continue;
+                        }
                         %><option value="<%
                         out.println(getData.forCombo.get(i)); %>
                         "><%
@@ -162,20 +187,37 @@
             <fieldset>
                 <input type ="radio" name ="uuidEnt" value ="false" checked> Randomly Generate UUID<br>
                 <input type="radio" name="uuidEnt" value="true"> Enter UUID Here:
-                <input type="text" name="enter_uuidBox"><br><br>
+                <input type="text" name="enter_uuidBox" placeholder="AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA"><br><br>
             </fieldset>
             <input type="hidden" name="hidden" value="<%= result %>" />
-            <input type="submit" value="Enter" name="enterData"> 
+            <input type="submit" value="Submit" name="enterData"> 
 
         </form>
             <SCRIPT>
             <!--
             function displayResults()
             {
-                if (document.myForm.hidden.value == 1) {
+                if (document.myForm.hidden.value === 1) {
                     alert("Data inserted!");
-                    
                 }
+            }
+            window.onload = function() {
+            document.getElementById("n_nameBox").focus();
+            }
+            function chooseName(input) {
+                document.getElementById("n_nameBox").value = input.value;
+            }
+            function chooseNameType(input) {
+                document.getElementById("nt_nameBox").value = input.value;
+            }
+            function chooseNTDes(input) {
+                document.getElementById("nt_desBox").value = input.value;
+            }
+            function chooseNTA(input) {
+                document.getElementById("nta_nameBox").value = input.value;
+            }
+            function chooseNTADes(input) {
+                document.getElementById("nta_desBox").value = input.value;
             }
             // -->
             </SCRIPT>

@@ -1,0 +1,58 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Nov 15, 2016, 11:25:05 AM
+    Author     : pdlo003
+*/
+
+body {
+    background-color: lightblue;
+}
+
+h1 {
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center; 
+}
+
+input[type=submit] {
+    display: block;
+    width: 500px;
+    margin: 0px auto;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+}
+
+input[type=submit]:hover {
+    background-color: #45a049;
+}
+
+input[type=text], select {
+    width: 40%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+fieldset {
+    width: 500px;
+    margin: 0px auto;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+}
+
+legend {
+    background-color: #F2F2F2;
+    display: block;
+    padding-left: 2px;
+    padding-right: 2px;
+    border-style: outset;
+}
