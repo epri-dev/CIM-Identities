@@ -29,6 +29,23 @@ public class CreateTable {
     public static void main(String[] args) {
        String URL = "jdbc:postgresql://localhost:5432/CIMIdentity";
        String LoginID = "postgres";
+       
+       try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(CreateTable.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(CreateTable.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(CreateTable.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(CreateTable.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
   
        JPasswordField pwd = new JPasswordField(10);
        pwd.addHierarchyListener(new HierarchyListener() 
@@ -49,7 +66,7 @@ public class CreateTable {
                         }
                 }
         });
-        int action = JOptionPane.showConfirmDialog(null, pwd,"Enter Password",JOptionPane.OK_CANCEL_OPTION);
+        int action = JOptionPane.showConfirmDialog(null, pwd,"Enter PostgreSQL Password",JOptionPane.OK_CANCEL_OPTION);
         if (action < 0) JOptionPane.showMessageDialog(null,"Cancel, X or escape key selected");
        
        String passw = new String(pwd.getPassword());
@@ -139,4 +156,5 @@ public class CreateTable {
     }
     
     
+
 
