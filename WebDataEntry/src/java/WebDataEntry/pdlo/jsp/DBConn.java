@@ -11,7 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  *
@@ -24,7 +24,6 @@ public class DBConn {
     boolean uuidEntered = false;
     boolean enterPressed = false;
     public ArrayList<String> forCombo = new ArrayList<>();
-    
     String n_nameNew = "";
     String nt_nameNew = "";
     String nt_desNew = "";
@@ -46,8 +45,7 @@ public class DBConn {
     }
     public void connect(String column, String table){
         try{
-            
-           // Class.forName("com.mysql.jdbc.Driver");
+           
             Connection con = DriverManager.getConnection(host, uName, password);           
             Statement stmt = con.createStatement();
 
@@ -56,12 +54,16 @@ public class DBConn {
 
             ResultSet dataSet = stmt.executeQuery(getData);
             while(dataSet.next()){
-                forCombo.add(dataSet.getString(column));
+                forCombo.add(dataSet.getString(column).trim());
             }
-
-        }
             
-        catch(SQLException err){
+            Set<String> toRetain = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+            toRetain.addAll(forCombo);
+            Set<String> set = new LinkedHashSet<String>(forCombo);
+            set.retainAll(new LinkedHashSet<String>(toRetain));
+            forCombo = new ArrayList<String>(set);
+            
+        } catch(SQLException err){
             System.out.println(err.getMessage());
         }
     }
@@ -72,7 +74,7 @@ public class DBConn {
             Connection con = DriverManager.getConnection(host, uName, password);
             Statement stmt = con.createStatement();
         
-            if(uuidEntered ==false){
+            if(uuidEntered == false){
             
                 String genUUID = "INSERT INTO public.\"Identity\" (id_pkey, entry)"
                         + "VALUES (DEFAULT, DEFAULT)";
