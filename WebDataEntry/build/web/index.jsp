@@ -4,6 +4,7 @@
     Author     : pdlo003
 --%>
 
+<%@page import="java.util.Iterator"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.sql.*"%>
 <%@page import="WebDataEntry.pdlo.jsp.*"%>
@@ -99,7 +100,7 @@
     <div class="col-sm-2 sidenav">
       <p><a href="https://github.com/epri-dev/CIM-Identities">Github: Source Code</a></p>
     </div>
-    <div class="col-sm-8 text-left">
+    <div class="col-sm-4 text-left">
         <h1>Enter Data for CIM Database </h1>
         
         <form name="myForm" action="index.jsp" method="POST">   
@@ -113,19 +114,17 @@
                     DBConn getData = new DBConn();
                         
                     getData.connect("n_name", "\"Name\"");
-                    for (int i = 0; i < getData.forCombo.size(); i ++) {
-                        if (getData.forCombo.get(i).trim().length() == 0) {
-                            continue;
-                        }   
-                        %><option value="<%
-                        out.println(getData.forCombo.get(i)); %>
-                        "><%
-                        out.println(getData.forCombo.get(i)); %>
-                        </option> <% 
-                    }
-                    getData.forCombo.clear();
-
-                    %>
+                    
+                    Iterator it = getData.forCombo.iterator();
+                    while (it.hasNext()) {
+                        Object object = it.next();
+                    %><option value="<%
+                        out.println(object); %>
+                        "><% out.println(object); %>
+                    </option> <%
+                        }
+                        getData.forCombo.clear();
+                    %> 
                     
                  </select><br><br></fieldset>
         
@@ -137,19 +136,16 @@
                 <option value=""></option>
                 <%    
                     getData.connect("nt_name", "\"NameType\"");
-                    for (int i = 0; i < getData.forCombo.size(); i ++) {
-                        if (getData.forCombo.get(i).trim().length() == 0) {
-                            continue;
+                    Iterator itn = getData.forCombo.iterator();
+                    while (itn.hasNext()) {
+                        Object object = itn.next();
+                    %><option value="<%
+                        out.println(object); %>
+                        "><% out.println(object); %>
+                    </option> <%
                         }
-                        %><option value="<%
-                        out.println(getData.forCombo.get(i)); %>
-                        "><%
-                        out.println(getData.forCombo.get(i)); %>
-                        </option> <% 
-                    }
-                    getData.forCombo.clear();
-
-                    %>
+                        getData.forCombo.clear();
+                    %> 
             </select><br><br>
             Description<br>
             <input type="text" name="nt_desBox" id="nt_desBox" placeholder="Description">
@@ -157,19 +153,16 @@
                 <option value=""></option>
                  <%    
                     getData.connect("nt_description", "\"NameType\"");
-                    for (int i = 0; i < getData.forCombo.size(); i ++) {
-                        if (getData.forCombo.get(i).trim().length() == 0) {
-                            continue;
+                    Iterator itnd = getData.forCombo.iterator();
+                    while (itnd.hasNext()) {
+                        Object object = itnd.next();
+                    %><option value="<%
+                        out.println(object); %>
+                        "><% out.println(object); %>
+                    </option> <%
                         }
-                        %><option value="<%
-                        out.println(getData.forCombo.get(i)); %>
-                        "><%
-                        out.println(getData.forCombo.get(i)); %>
-                        </option> <% 
-                    }
-                    getData.forCombo.clear();
-
-                    %>
+                        getData.forCombo.clear();
+                    %> 
             </select><br><br></fieldset>
             <fieldset>
                 <legend><strong>Name Type Authority:</strong></legend>
@@ -179,19 +172,16 @@
                     <option value=""></option>
                     <%    
                     getData.connect("nta_name", "\"NameTypeAuthority\"");
-                    for (int i = 0; i < getData.forCombo.size(); i ++) {
-                        if (getData.forCombo.get(i).trim().length() == 0) {
-                            continue;
+                    Iterator itnt = getData.forCombo.iterator();
+                    while (itnt.hasNext()) {
+                        Object object = itnt.next();
+                    %><option value="<%
+                        out.println(object); %>
+                        "><% out.println(object); %>
+                    </option> <%
                         }
-                        %><option value="<%
-                        out.println(getData.forCombo.get(i)); %>
-                        "><%
-                        out.println(getData.forCombo.get(i)); %>
-                        </option> <% 
-                    }
-                    getData.forCombo.clear();
-
-                    %>
+                        getData.forCombo.clear();
+                    %> 
                 </select><br><br>
                 Description<br>
                 <input type="text" name="nta_desBox" id="nta_desBox" placeholder="Description">
@@ -199,19 +189,16 @@
                     <option value=""></option>
                     <%    
                     getData.connect("nta_description", "\"NameTypeAuthority\"");
-                    for (int i = 0; i < getData.forCombo.size(); i ++) {
-                        if (getData.forCombo.get(i).trim().length() == 0) {
-                            continue;
+                    Iterator itntd = getData.forCombo.iterator();
+                    while (itntd.hasNext()) {
+                        Object object = itntd.next();
+                    %><option value="<%
+                        out.println(object); %>
+                        "><% out.println(object); %>
+                    </option> <%
                         }
-                        %><option value="<%
-                        out.println(getData.forCombo.get(i)); %>
-                        "><%
-                        out.println(getData.forCombo.get(i)); %>
-                        </option> <% 
-                    }
-                    getData.forCombo.clear();
-
-                    %>
+                        getData.forCombo.clear();
+                    %> 
                 </select><br><br>
             </fieldset>
         <fieldset>
@@ -224,7 +211,9 @@
             
          </fieldset>
         </form>
+            
     </div>
+            
   </div>
   </div>
             <SCRIPT>

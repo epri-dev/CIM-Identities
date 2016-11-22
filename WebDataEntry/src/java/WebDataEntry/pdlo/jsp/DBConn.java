@@ -23,7 +23,7 @@ public class DBConn {
     String password = "epri97!!";
     boolean uuidEntered = false;
     boolean enterPressed = false;
-    public ArrayList<String> forCombo = new ArrayList<>();
+    public Set<String> forCombo = new LinkedHashSet<String>();
     String n_nameNew = "";
     String nt_nameNew = "";
     String nt_desNew = "";
@@ -55,13 +55,7 @@ public class DBConn {
             ResultSet dataSet = stmt.executeQuery(getData);
             while(dataSet.next()){
                 forCombo.add(dataSet.getString(column).trim());
-            }
-            
-            Set<String> toRetain = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
-            toRetain.addAll(forCombo);
-            Set<String> set = new LinkedHashSet<String>(forCombo);
-            set.retainAll(new LinkedHashSet<String>(toRetain));
-            forCombo = new ArrayList<String>(set);
+            }   
             
         } catch(SQLException err){
             System.out.println(err.getMessage());
