@@ -40,6 +40,7 @@
       <ul class="nav navbar-nav">
         <li><a href="index.jsp">Enter Data</a></li>
         <li class="active"><a href="viewDB.jsp">View Database</a></li>
+        <li><a href="query.jsp">Query</a></li>
     </div>
   </div>
 </nav>
@@ -81,12 +82,12 @@
                %>
            <tr>
            
-           <td><%= rs.getString(1) %></td>
-           <td><%= rs.getString(5) %></td>
-           <td><%= rs.getString(3) %></td>
-           <td><%= rs.getString(2) %></td>
-           <td><%= rs.getString(7) %></td>
-           <td><%= rs.getString(8) %></td>
+           <td><%= rs.getString("n_pkey") %></td>
+           <td><%= rs.getString("n_name") %></td>
+           <td><%= rs.getString("nt_name") %></td>
+           <td><%= rs.getString("nt_description") %></td>
+           <td><%= rs.getString("nta_name") %></td>
+           <td><%= rs.getString("nta_description") %></td>
            
            </tr>
            <%

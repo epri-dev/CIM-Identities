@@ -92,6 +92,7 @@
       <ul class="nav navbar-nav">
         <li class="active"><a href="index.jsp">Enter Data</a></li>
         <li><a href="viewDB.jsp">View Database</a></li>
+        <li><a href="query.jsp">Query</a></li>
     </div>
   </div>
 </nav>

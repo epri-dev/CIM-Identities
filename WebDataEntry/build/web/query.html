@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>View Database</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="http://www.epri.com/Pages/Default.aspx">EPRI</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li><a href="index.jsp">Enter Data</a></li>
+        <li><a href="viewDB.jsp">View Database</a></li>
+        <li class="active"><a href="query.jsp">Query</a></li>
+    </div>
+  </div>
+</nav>
+  <div class="container-fluid text-center">
+  <div class="row content">
+    <div class="col-sm-2 sidenav">
+      <p><a href="https://github.com/epri-dev/CIM-Identities">Github: Source Code</a></p>
+    </div>
+    <div class="col-sm-8 text-left">
+        <h1>Query the DB</h1>
+        <form name="myForm" action="query.jsp" method="POST">  
+            <p>Which rows would you like to see?</p>
+            <fieldset><legend>Select:</legend>
+            <input type="checkbox" name="fields" value="uuid">UUID<br>
+            <input type="checkbox" name="fields" value="name">Name<br>
+            <input type="checkbox" name="fields" value="ntName">NameType Name<br>
+            <input type="checkbox" name="fields" value="ntDes">NameType Description<br>
+            <input type="checkbox" name="fields" value="ntaName">NameType Authority Name<br>
+            <input type="checkbox" name="fields" value="ntaDes">NameType Authority Description<br>
+            </fieldset><br>
+            <fieldset><legend>Where:</legend>
+                <div id="container">
+                <select name="field">
+                    <option value="UUID">UUID</option>
+                    <option value="Name">Name</option>
+                    <option value="ntname">NameType Name</option>
+                    <option value="ntdes">NameType Description</option>
+                    <option value="ntaname">NameType Authority Name</option>
+                    <option value="ntades">NameType Authority Description</option>               
+                </select>
+                <select name="operator">
+                    <option value="=">equals</option>
+                    <option value="!=">does not equal</option>
+                    <option value="like">like</option>
+                    <option value="not like">not like</option>
+                    <option value="between">between</option>
+                    <option value="in">in</option>
+                    <option value="<="><=</option>
+                    <option value=">=">>=</option>
+                    <option value="<"><</option>
+                    <option value=">">></option>
+                </select>
+                    <input type="text" placeholder="">
+                    <select name="condition" id="con">
+                        <option value=""></option>
+                        <option value="and">and</option>
+                        <option value="or">or</option>
+                    </select>
+                    <button onclick="removeInput(this);">Remove</button>
+                    <br><br>
+                </div>
+                <div id="add_more"></div>
+                <a href="javascript:void(0)" onClick="addInput('container', 'add_more');" id="add_more_text">+ Add more</a>
+            </fieldset>
+            <fieldset>
+                <br><br><input type="submit" value="Submit" name="retrieveData">
+            </fieldset>
+        </form>  
+        <script>
+            var counter = 1;
+
+            function addInput(divName, template) {
+                
+                var newdiv = document.createElement('div');
+                newdiv.innerHTML = document.getElementById(divName).innerHTML;
+                newdiv.className = 'added';
+                document.getElementById(template).appendChild(newdiv);
+                counter++;
+                
+
+                var selectElements = document.querySelectorAll('select');
+                for (var i = 0; i < selectElements.length; i++) {
+                    selectElements[i].id = 'id-' + i;
+                    selectElements[i].name = 'category' + i;
+                }
+            }
+
+        function removeInput(obj) {
+            if (obj.parentNode.className == 'added') { //so we don't remove parent node
+                obj.parentNode.parentNode.removeChild(obj.parentNode);
+                counter--;
+            }
+        }
+        </script>
+    </div>
+  </div>
+  </div>
+    </body>
+</html>
