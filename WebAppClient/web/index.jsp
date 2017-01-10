@@ -28,53 +28,6 @@
                 
             }
         </style>
-        
-         <%
-            int result = 0;
-            if (request.getParameter("enterData") != null) {
-                                 
-                String name = new String();
-                String ntName = new String();
-                String ntDesBox = new String();
-                String ntaName = new String();
-                String ntaDesBox = new String();
-                String uuidBox = new String();
-                boolean entUUID = false;
-                
-                String pick = request.getParameter("uuidEnt");
-                if (pick.equals("random")) {
-                    uuidBox = "";
-                    entUUID = false;
-                }
-                else if (pick.equals("enter")) {
-                    entUUID = true;
-                    uuidBox = request.getParameter("enter_uuidBox");
-                }
-               
-                
-                if (request.getParameter("n_nameBox") != null) {
-                    name = request.getParameter("n_nameBox");
-                }
-                if (request.getParameter("nt_nameBox") != null) {
-                    ntName = request.getParameter("nt_nameBox");
-                }
-                if (request.getParameter("nt_desBox") != null) {
-                    ntDesBox = request.getParameter("nt_desBox");
-                }
-                if (request.getParameter("nta_nameBox") != null) {
-                    ntaName = request.getParameter("nta_nameBox");
-                }
-                if (request.getParameter("nta_desBox") != null) {
-                    ntaDesBox = request.getParameter("nta_desBox");
-                }
-                /* instantiate the connection and move over the data */
-                DBConn insData = new DBConn();
-                
-               result = insData.sendToDB(name, ntName, ntDesBox, ntaName, ntaDesBox, uuidBox, entUUID);
-            }
-            
-
-                %>
     </head>
     <body onLoad="displayResults()">
         
@@ -206,11 +159,8 @@
                 <input type="radio" name ="uuidEnt" value ="random" checked="checked"> Randomly Generate UUID<br>
                 <input type="radio" name="uuidEnt" value="enter"> Enter UUID Here:
                 <input type="text" name="enter_uuidBox" placeholder="0c2cdd47-8695-43f4-8e9a-1712d26da12f"><br><br>
-            
-            <input type="hidden" name="hidden" value="<%= result %>" />
             <input type="submit" value="Submit" name="enterData"> 
-            
-         </fieldset>
+        </fieldset>
         </form>
             
     </div>

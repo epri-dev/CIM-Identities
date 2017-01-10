@@ -71,24 +71,8 @@ public class DatabaseServlet extends HttpServlet {
             out.println("<body>"); 
             out.println("Your data has been entered.<br><br>");
             
-            out.println("<table style=\"width:100%\">");
-            out.println("<tr>");
-            out.println("<th>mRID</th>");
-            out.println("<th> Name: Name</th>" );
-            out.println("<th>Name Type: Name</th>");
-            out.println("<th>Name Type: Description</th>");
-            out.println("<th>Name Type Authority: Name</th>");
-            out.println("<th>Name Type Authority: Description</th>");
-            out.println("</tr><tr>");
-                    
-    /*        for(int j = 0; j < showDB().size(); j++){
-                if (j>0 && j%6 == 0){
-                    out.println("</tr><tr>");
-                }
-                out.println("<td>" + showDB().get(j) + "</td>");
-            }
-            
-     */       out.println("</table></tr>");
+            out.println("Return to ");
+            out.println("<a href=\"index.jsp\">Enter Data</a>");
             out.println("</body>");
             out.println("</html>");
         }
