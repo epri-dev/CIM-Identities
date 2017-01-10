@@ -20,3 +20,9 @@ Contains the following subdirectories:
 ### WebDataEntry
 * Contains the source code for the JSP used to launch a sample web application for inserting data remotely into the database.
 
+### WebApp
+* Contains the source code for the SOAP web service.  DatabaseService.java is the skeleton upon which the WSDL was generated using JAX-WS.
+
+### WebAppClient
+* Using the WSDL URL from WebApp, WebAppClient contains the files necessary to launch the web service in the web browser in order to modify the CIM Database.  Similar to WebDataEntry but created as a SOAP web service.
+
