@@ -90,7 +90,7 @@ public class CreateTable {
                       "CONSTRAINT io_pkey PRIMARY KEY (io_pkey), " +
                       "CONSTRAINT io_idkey FOREIGN KEY (io_pkey) " +
                       "REFERENCES public.\"Identity\" (id_pkey) MATCH SIMPLE " +
-                      "ON UPDATE NO ACTION ON DELETE CASCADE )" +
+                      "ON UPDATE CASCADE ON DELETE CASCADE )" +
                       "WITH ( OIDS = FALSE);" +
                       "ALTER TABLE public.\"IdentifiedObject\"" +
                       "OWNER TO postgres;" +
@@ -101,7 +101,7 @@ public class CreateTable {
                       "CONSTRAINT n_pkey PRIMARY KEY (n_pkey), " +
                       "CONSTRAINT n_idkey FOREIGN KEY (n_pkey)" +
                       " REFERENCES public.\"Identity\" (id_pkey) MATCH SIMPLE" +
-                      " ON UPDATE NO ACTION ON DELETE CASCADE" +
+                      " ON UPDATE CASCADE ON DELETE CASCADE" +
                       ") WITH ( OIDS = FALSE );" +
                       " ALTER TABLE public.\"Name\" OWNER TO postgres;" +
                   
@@ -112,7 +112,7 @@ public class CreateTable {
                       " CONSTRAINT nt_pkey PRIMARY KEY (nt_pkey), " +
                       " CONSTRAINT nt_nkey FOREIGN KEY (nt_pkey) " +
                       " REFERENCES public.\"Name\" (n_pkey) MATCH SIMPLE " +
-                      " ON UPDATE NO ACTION ON DELETE CASCADE ) " +
+                      " ON UPDATE CASCADE ON DELETE CASCADE ) " +
                       " WITH ( OIDS = FALSE ); " +
                       " ALTER TABLE public.\"NameType\" OWNER TO postgres; " +
                   
@@ -123,7 +123,7 @@ public class CreateTable {
                       " CONSTRAINT nta_pkey PRIMARY KEY (nta_pkey), " +
                       " CONSTRAINT nta_ntkey FOREIGN KEY (nta_pkey) " +
                       " REFERENCES public.\"NameType\" (nt_pkey) MATCH SIMPLE " +
-                      " ON UPDATE NO ACTION ON DELETE CASCADE )" +
+                      " ON UPDATE CASCADE ON DELETE CASCADE )" +
                       " WITH ( OIDS = FALSE ); " +
                       " ALTER TABLE public.\"NameTypeAuthority\" " +
                       " OWNER TO postgres;";
