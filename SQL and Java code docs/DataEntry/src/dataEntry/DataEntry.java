@@ -19,6 +19,9 @@ import java.awt.Window;
 import java.awt.event.HierarchyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.TreeSet;
 import javax.swing.SwingUtilities;
 /**
  *
@@ -44,7 +47,7 @@ public class DataEntry extends javax.swing.JFrame {
     public DataEntry(String Pass) {
         uPass = Pass;
         initComponents();
-        
+        this.setLocationRelativeTo(null);
     }
     
         //Populate Combobox with previous entries
@@ -60,8 +63,14 @@ public class DataEntry extends javax.swing.JFrame {
 
             ResultSet dataSet = stmt.executeQuery(getData);
             while(dataSet.next()){
-                forCombo.add(dataSet.getString(column));
+                forCombo.add(dataSet.getString(column).trim());
             }
+            
+            Set<String> toRetain = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+            toRetain.addAll(forCombo);
+            Set<String> set = new LinkedHashSet<String>(forCombo);
+            set.retainAll(new LinkedHashSet<String>(toRetain));
+            forCombo = new ArrayList<String>(set);
 
         }
             
@@ -70,8 +79,57 @@ public class DataEntry extends javax.swing.JFrame {
         }
     }
 
-       //Send text entered to SQL database
-    public void sendToDB(String n_nameNew, String nt_nameNew, String nt_desNew, String nta_nameNew, String nta_desNew){
+    public void dbDelete(String mRID) {
+        try {
+        Connection con = DriverManager.getConnection(host, uName, uPass);
+        Statement stmt = con.createStatement();
+        
+        String delUUID = "DELETE FROM public.\"Identity\" WHERE id_pkey = '" +
+                mRID + "'";
+        
+        stmt.executeUpdate(delUUID);
+        
+        stmt.close();
+        con.close();
+        
+        JOptionPane.showMessageDialog( null, "Data deleted" );
+        
+        } catch(SQLException err){
+            JOptionPane.showMessageDialog( null, err.getMessage());
+        }
+    }
+    
+    
+    public void dbModify(String n_nameNew, String nt_nameNew, String nt_desNew, String nta_nameNew, String nta_desNew, String mRID) {
+        try {
+            Connection con = DriverManager.getConnection(host, uName, uPass);
+            Statement stmt = con.createStatement();
+            
+            String updateName = "UPDATE public.\"Name\" SET n_name = '" +
+                                n_nameNew +"' WHERE n_pkey = '" + mRID + "'";
+            String updateNT =   "UPDATE public.\"NameType\" SET nt_name = '" +
+                                nt_nameNew + "', nt_description = '" + nt_desNew +
+                                "' WHERE nt_pkey = '" + mRID + "'";
+            String updateNTA =  "UPDATE public.\"NameTypeAuthority\" SET nta_name = '" +
+                                nta_nameNew + "', nta_description = '" + nta_desNew +
+                                "' WHERE nta_pkey = '" + mRID + "'";
+            
+            stmt.executeUpdate(updateName);
+            stmt.executeUpdate(updateNT);
+            stmt.executeUpdate(updateNTA);
+            
+            stmt.close();
+            con.close();
+            
+            JOptionPane.showMessageDialog( null, "Data modified" );
+        }
+        catch(SQLException err){
+            JOptionPane.showMessageDialog( null, err.getMessage());
+        }  
+            
+    }
+    //Send text entered to SQL database
+    public void dbInsert(String n_nameNew, String nt_nameNew, String nt_desNew, String nta_nameNew, String nta_desNew){
        
         try{
             Connection con = DriverManager.getConnection(host, uName, uPass);
@@ -114,9 +172,11 @@ public class DataEntry extends javax.swing.JFrame {
             
             stmt.close();
             con.close();
+            
+            JOptionPane.showMessageDialog( null, "Data inserted" );
         }
         catch(SQLException err){
-            System.out.println(err.getMessage());
+            JOptionPane.showMessageDialog( null, err.getMessage());
         }
 
     }
@@ -130,6 +190,7 @@ public class DataEntry extends javax.swing.JFrame {
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
+        buttonGroup2 = new javax.swing.ButtonGroup();
         jLabel1 = new javax.swing.JLabel();
         n_nameBox = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -162,6 +223,9 @@ public class DataEntry extends javax.swing.JFrame {
         enter_uuidSel = new javax.swing.JRadioButton();
         enter_uuidBox = new javax.swing.JFormattedTextField();
         enterButton = new javax.swing.JButton();
+        Insert = new javax.swing.JRadioButton();
+        Modify = new javax.swing.JRadioButton();
+        Delete = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -263,6 +327,7 @@ public class DataEntry extends javax.swing.JFrame {
         jLabel13.setText("UUID");
 
         buttonGroup1.add(gen_uuidSel);
+        gen_uuidSel.setSelected(true);
         gen_uuidSel.setText("Randomly Generate");
         gen_uuidSel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -293,6 +358,26 @@ public class DataEntry extends javax.swing.JFrame {
             }
         });
 
+        buttonGroup2.add(Insert);
+        Insert.setSelected(true);
+        Insert.setText("Insert");
+
+        buttonGroup2.add(Modify);
+        Modify.setText("Modify");
+        Modify.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ModifyActionPerformed(evt);
+            }
+        });
+
+        buttonGroup2.add(Delete);
+        Delete.setText("Delete");
+        Delete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DeleteActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -303,68 +388,72 @@ public class DataEntry extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(Delete)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(enterButton, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel1)
                                     .addComponent(n_nameBox, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel2)
-                                    .addComponent(n_name, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(n_name, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jLabel3)
-                                    .addComponent(nt_nameBox, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel5)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel4))
-                                .addGap(58, 58, 58)
+                                    .addComponent(jLabel4)
+                                    .addComponent(nt_nameBox)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel6)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addComponent(nt_namecb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel7)
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addComponent(nt_descb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel11)
-                        .addGap(145, 145, 145))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(nta_nameBox, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(nta_namecb, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel7)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(nt_namecb, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(nt_descb, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel8)
                             .addComponent(jLabel10)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel12)
                             .addComponent(nta_descb, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel13)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(enter_uuidSel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(enter_uuidBox, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(gen_uuidSel))
-                        .addGap(0, 0, Short.MAX_VALUE))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(enterButton, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18))
+                                .addComponent(jLabel13)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(enter_uuidSel)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(enter_uuidBox, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(gen_uuidSel)))
+                            .addComponent(Insert)
+                            .addComponent(Modify))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel9)
+                            .addComponent(nta_nameBox, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(nta_namecb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addContainerGap())
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel11)
+                                .addGap(137, 137, 137))))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -394,8 +483,8 @@ public class DataEntry extends javax.swing.JFrame {
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(nt_descb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(nt_descb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -414,9 +503,9 @@ public class DataEntry extends javax.swing.JFrame {
                     .addComponent(jLabel12))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(nta_descb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(nta_descb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -426,9 +515,19 @@ public class DataEntry extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(enter_uuidSel)
                     .addComponent(enter_uuidBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(enterButton)
-                .addContainerGap())
+                .addGap(18, 18, 18)
+                .addComponent(Insert)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(enterButton)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(Modify)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(Delete)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         pack();
@@ -445,14 +544,28 @@ public class DataEntry extends javax.swing.JFrame {
         nt_desNew = nt_desBox.getText();
         nta_nameNew = nta_nameBox.getText();
         nta_desNew = nta_desBox.getText();
+        String mRID = enter_uuidBox.getText();
       
-        sendToDB(n_nameNew, nt_nameNew, nt_desNew, nta_nameNew, nta_desNew);
-        
+        //call dbInsert() if Insert radio button is checked
+        if (Insert.isSelected()) {
+        dbInsert(n_nameNew, nt_nameNew, nt_desNew, nta_nameNew, nta_desNew);
+        }
+        //call dbModify() if Modify radio button is checked
+        //Rewrites the record with all data on screen
+        else if (Modify.isSelected()) {
+            dbModify(n_nameNew, nt_nameNew, nt_desNew, nta_nameNew, nta_desNew, mRID);
+        }
+        //call dbDelete() if Delete radio button is checked
+        //only requires the mRID due to cascade deletes
+        else if (Delete.isSelected()) {
+            dbDelete(mRID);
+        }
         n_nameBox.setText("");
         nt_nameBox.setText("");
         nt_desBox.setText("");
         nta_nameBox.setText("");
         nta_desBox.setText("");
+        enter_uuidBox.setText("");
     }//GEN-LAST:event_enterButtonActionPerformed
 
     private void gen_uuidSelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gen_uuidSelActionPerformed
@@ -492,6 +605,14 @@ public class DataEntry extends javax.swing.JFrame {
         String nameSel = (String)nta_descb.getSelectedItem();
         nta_desBox.setText(nameSel);
     }//GEN-LAST:event_nta_descbActionPerformed
+
+    private void DeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_DeleteActionPerformed
+
+    private void ModifyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ModifyActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ModifyActionPerformed
 
     
     /**
@@ -570,7 +691,11 @@ public class DataEntry extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JRadioButton Delete;
+    private javax.swing.JRadioButton Insert;
+    private javax.swing.JRadioButton Modify;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JButton enterButton;
     private javax.swing.JFormattedTextField enter_uuidBox;
     private javax.swing.JRadioButton enter_uuidSel;
