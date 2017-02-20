@@ -7,8 +7,6 @@ package dataentryform;
 
 import java.awt.Component;
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 import java.awt.event.WindowAdapter;
@@ -43,8 +41,7 @@ public class DataEntryForm extends javax.swing.JFrame {
     int curPage = 1;
     int numRows = 30;
     public DefaultTableModel model = new DefaultTableModel();
-    public boolean ShowData = false;
-    
+    public boolean ShowData = false; 
     String n_nameNew = "";
     String nt_nameNew = "";
     String nt_desNew = "";
@@ -597,6 +594,7 @@ public class DataEntryForm extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Change Database", jPanel1);
 
+        dataTable.setAutoCreateRowSorter(true);
         dataTable.setModel(model);
         jScrollPane1.setViewportView(dataTable);
 
@@ -677,7 +675,7 @@ public class DataEntryForm extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 501, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 573, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(prev)
@@ -690,7 +688,7 @@ public class DataEntryForm extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel16)
                     .addComponent(numRowsBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(101, 101, 101)
+                .addGap(29, 29, 29)
                 .addComponent(showDataBox))
         );
 
@@ -734,13 +732,18 @@ public class DataEntryForm extends javax.swing.JFrame {
         }
         //call dbModify() if Modify radio button is checked
         //Rewrites the record with all data on screen
-        else if (Modify.isSelected()) {
+        else if (Modify.isSelected() && enter_uuidSel.isSelected() ) {
             dbModify(n_nameNew, nt_nameNew, nt_desNew, nta_nameNew, nta_desNew, mRID);
         }
         //call dbDelete() if Delete radio button is checked
         //only requires the mRID due to cascade deletes
-        else if (Delete.isSelected()) {
+        else if ( Delete.isSelected() && enter_uuidSel.isSelected() ) {
             dbDelete(mRID);
+        }
+        
+        else {
+            JOptionPane.showMessageDialog( null, "Invalid argument" );
+            return;
         }
         n_nameBox.setText("");
         nt_nameBox.setText("");
@@ -781,7 +784,7 @@ public class DataEntryForm extends javax.swing.JFrame {
     }//GEN-LAST:event_nta_descbActionPerformed
 
     private void curPageBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_curPageBoxActionPerformed
-           createTable();
+        createTable();
     }//GEN-LAST:event_curPageBoxActionPerformed
 
     private void showDataBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showDataBoxActionPerformed
