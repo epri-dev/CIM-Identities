@@ -11,6 +11,8 @@ import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -34,6 +36,7 @@ public class DataEntryForm extends javax.swing.JFrame {
     String host = "jdbc:postgresql://localhost:5432/CIMIdentity";
     String uName = "postgres";
     String uPass; 
+    //TreeSet forCombo = new TreeSet();
     ArrayList<String> forCombo = new ArrayList<>();
     boolean uuidEntered = false;
     boolean enterPressed = false;
@@ -71,21 +74,29 @@ public class DataEntryForm extends javax.swing.JFrame {
 
             ResultSet dataSet = stmt.executeQuery(getData);
             forCombo.add("");   //makes sure all comboboxes start with blank line
-            while(dataSet.next()){
+            while(dataSet.next()) {
                 forCombo.add(dataSet.getString(column).trim());
             }
+        
+        
+        Set<String> toRetain = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+        toRetain.addAll(forCombo);
+        Set<String> set = new LinkedHashSet<String>(forCombo);
+        set.retainAll(new LinkedHashSet<String>(toRetain));
+        forCombo = new ArrayList<String>(set);
             
-            Set<String> toRetain = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
-            toRetain.addAll(forCombo);
-            Set<String> set = new LinkedHashSet<String>(forCombo);
-            set.retainAll(new LinkedHashSet<String>(toRetain));
-            forCombo = new ArrayList<String>(set);
-
-        }
-            
-        catch(SQLException err){
+        } catch(SQLException err){
             System.out.println(err.getMessage());
         }
+    }
+    
+    public void popComboBoxes(String column, String table, javax.swing.JComboBox<String> comboBox) {
+        connect(column, table);
+        
+        for(int i = 0; i < forCombo.size(); i ++)
+            comboBox.addItem(forCombo.get(i));
+        forCombo.clear();
+        
     }
     
     public void createTable() {
@@ -336,6 +347,7 @@ public class DataEntryForm extends javax.swing.JFrame {
         showDataBox = new javax.swing.JCheckBox();
         jLabel16 = new javax.swing.JLabel();
         numRowsBox = new javax.swing.JTextField();
+        csvExport = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -481,9 +493,8 @@ public class DataEntryForm extends javax.swing.JFrame {
                                         .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(nt_nameBox, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
-                                            .addComponent(n_nameBox, javax.swing.GroupLayout.Alignment.LEADING))
+                                        .addComponent(nt_nameBox, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
+                                        .addComponent(n_nameBox, javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(nta_nameBox, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(jLabel13))
@@ -641,6 +652,13 @@ public class DataEntryForm extends javax.swing.JFrame {
             }
         });
 
+        csvExport.setText("Export to .csv");
+        csvExport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                csvExportActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -668,14 +686,17 @@ public class DataEntryForm extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(totalPageBox, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(next)))
+                        .addComponent(next))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(csvExport)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 573, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 557, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(prev)
@@ -688,7 +709,9 @@ public class DataEntryForm extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel16)
                     .addComponent(numRowsBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(csvExport)
+                .addGap(7, 7, 7)
                 .addComponent(showDataBox))
         );
 
@@ -739,9 +762,7 @@ public class DataEntryForm extends javax.swing.JFrame {
         //only requires the mRID due to cascade deletes
         else if ( Delete.isSelected() && enter_uuidSel.isSelected() ) {
             dbDelete(mRID);
-        }
-        
-        else {
+        }  else {
             JOptionPane.showMessageDialog( null, "Invalid argument" );
             return;
         }
@@ -752,6 +773,17 @@ public class DataEntryForm extends javax.swing.JFrame {
         nta_desBox.setText("");
         enter_uuidBox.setText("");
         
+        n_name.removeAllItems();
+        nt_namecb.removeAllItems();
+        nt_descb.removeAllItems();
+        nta_namecb.removeAllItems();
+        nta_descb.removeAllItems();
+        
+        popComboBoxes("n_name", "\"Name\"", n_name);
+        popComboBoxes("nt_name", "\"NameType\"", nt_namecb);
+        popComboBoxes("nt_description", "\"NameType\"", nt_descb);
+        popComboBoxes("nta_name", "\"NameTypeAuthority\"", nta_namecb);
+        popComboBoxes("nta_description", "\"NameTypeAuthority\"", nta_descb); 
         
         if (showDataBox.isSelected()) {
             createTable();
@@ -810,6 +842,40 @@ public class DataEntryForm extends javax.swing.JFrame {
             createTable();
         }
     }//GEN-LAST:event_nextActionPerformed
+
+    private void csvExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_csvExportActionPerformed
+        String csvFile = "CIMIdentities.csv";
+        try {
+            
+        FileWriter writer = new FileWriter(csvFile);
+        Connection con = DriverManager.getConnection(host, uName, uPass);           
+        Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE, ResultSet.FETCH_UNKNOWN);
+        String query = "SELECT *" +
+                          "FROM public.\"NameType\" as nt, public.\"Name\" as n, " +
+                          "public.\"NameTypeAuthority\" as nta " +
+                          "WHERE n.n_pkey = nt.nt_pkey AND " +
+                          "nt.nt_pkey = nta.nta_pkey " +
+                          "ORDER BY n.n_name ASC;";
+        writer.write("mRID, Name, NameType Name, NameType Description, NameTypeAuthority Name, NameTypeAuthority Description\n");
+        
+        ResultSet rs = stmt.executeQuery(query);
+        while (rs.next()) {
+            writer.write(rs.getString("n_pkey") + ", " +
+                         rs.getString("n_name") + ", " +
+                         rs.getString("nt_name") + ", " +
+                         rs.getString("nt_description") + ", " +
+                         rs.getString("nta_name") + ", " +
+                         rs.getString("nta_description") + "\n");
+        }
+        
+        writer.close();
+        
+        JOptionPane.showMessageDialog(null, "CIMIdentities.csv created in project directory");
+        
+        } catch(IOException | SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        } 
+    }//GEN-LAST:event_csvExportActionPerformed
 
     /**
      * @param args the command line arguments
@@ -892,6 +958,7 @@ public class DataEntryForm extends javax.swing.JFrame {
     private javax.swing.JRadioButton Modify;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
+    private javax.swing.JButton csvExport;
     private javax.swing.JTextField curPageBox;
     private javax.swing.JTable dataTable;
     private javax.swing.JButton enterButton;
