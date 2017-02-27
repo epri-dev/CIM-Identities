@@ -81,10 +81,8 @@
                                               <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
                                               <Component id="jLabel8" alignment="0" min="-2" max="-2" attributes="0"/>
                                               <Component id="jScrollPane2" alignment="0" pref="0" max="32767" attributes="0"/>
-                                              <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                                                  <Component id="nt_nameBox" alignment="0" pref="100" max="32767" attributes="0"/>
-                                                  <Component id="n_nameBox" alignment="0" max="32767" attributes="0"/>
-                                              </Group>
+                                              <Component id="nt_nameBox" alignment="0" pref="165" max="32767" attributes="0"/>
+                                              <Component id="n_nameBox" alignment="0" max="32767" attributes="0"/>
                                               <Component id="jLabel11" alignment="0" min="-2" max="-2" attributes="0"/>
                                               <Component id="nta_nameBox" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
                                           </Group>
@@ -250,7 +248,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="n_nameActionPerformed"/>
               </Events>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="connect(&quot;n_name&quot;, &quot;\&quot;Name\&quot;&quot;);&#xa;    for (int i = 0; i &lt; forCombo.size(); i ++)&#xa;        n_name.addItem(forCombo.get(i));&#xa;    forCombo.clear();"/>
+                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="connect(&quot;n_name&quot;, &quot;\&quot;Name\&quot;&quot;);&#xa;for (int i = 0; i &lt; forCombo.size(); i ++)&#xa;    n_name.addItem(forCombo.get(i));&#xa;forCombo.clear();"/>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
             </Component>
@@ -281,7 +279,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nt_namecbActionPerformed"/>
               </Events>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="    connect(&quot;nt_name&quot;, &quot;\&quot;NameType\&quot;&quot;);&#xd;&#xa;    for(int i = 0; i &lt; forCombo.size(); i ++)&#xd;&#xa;        nt_namecb.addItem(forCombo.get(i));&#xd;&#xa;    forCombo.clear();"/>
+                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="connect(&quot;nt_name&quot;, &quot;\&quot;NameType\&quot;&quot;);&#xd;&#xa;for(int i = 0; i &lt; forCombo.size(); i ++)&#xd;&#xa;   nt_namecb.addItem(forCombo.get(i));&#xd;&#xa;forCombo.clear();&#xd;&#xa;"/>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
             </Component>
@@ -320,7 +318,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nt_descbActionPerformed"/>
               </Events>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="    connect(&quot;nt_description&quot;, &quot;\&quot;NameType\&quot;&quot;);&#xd;&#xa;    for(int i = 0; i &lt; forCombo.size(); i ++)&#xd;&#xa;        nt_descb.addItem(forCombo.get(i));&#xd;&#xa;    forCombo.clear();"/>
+                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="connect(&quot;nt_description&quot;, &quot;\&quot;NameType\&quot;&quot;);&#xd;&#xa;for(int i = 0; i &lt; forCombo.size(); i ++)&#xd;&#xa;   nt_descb.addItem(forCombo.get(i));&#xd;&#xa;forCombo.clear();&#xd;&#xa;"/>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
             </Component>
@@ -351,7 +349,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nta_namecbActionPerformed"/>
               </Events>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="    connect(&quot;nta_name&quot;, &quot;\&quot;NameTypeAuthority\&quot;&quot;);&#xd;&#xa;    for(int i = 0; i &lt; forCombo.size(); i ++)&#xd;&#xa;        nta_namecb.addItem(forCombo.get(i));&#xd;&#xa;    forCombo.clear();"/>
+                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="connect(&quot;nta_name&quot;, &quot;\&quot;NameTypeAuthority\&quot;&quot;);&#xd;&#xa;for(int i = 0; i &lt; forCombo.size(); i ++)&#xd;&#xa;   nta_namecb.addItem(forCombo.get(i));&#xd;&#xa;forCombo.clear();&#xd;&#xa;"/>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
             </Component>
@@ -390,7 +388,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nta_descbActionPerformed"/>
               </Events>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="    connect(&quot;nta_description&quot;, &quot;\&quot;NameTypeAuthority\&quot;&quot;);&#xd;&#xa;    for(int i = 0; i &lt; forCombo.size(); i ++)&#xd;&#xa;        nta_descb.addItem(forCombo.get(i));&#xd;&#xa;    forCombo.clear();"/>
+                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="connect(&quot;nta_description&quot;, &quot;\&quot;NameTypeAuthority\&quot;&quot;);&#xd;&#xa;for(int i = 0; i &lt; forCombo.size(); i ++)&#xd;&#xa;    nta_descb.addItem(forCombo.get(i));&#xd;&#xa;forCombo.clear();"/>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
             </Component>
@@ -413,6 +411,9 @@
                 <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" value="Randomly Generate"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="gen_uuidSelActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JRadioButton" name="enter_uuidSel">
               <Properties>
@@ -421,6 +422,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Enter Here:"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="enter_uuidSelActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JRadioButton" name="Insert">
               <Properties>
@@ -430,6 +434,9 @@
                 <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" value="Insert"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="InsertActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JRadioButton" name="Modify">
               <Properties>
@@ -438,6 +445,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Modify"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ModifyActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JRadioButton" name="Delete">
               <Properties>
@@ -446,6 +456,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Delete"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="DeleteActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="enterButton">
               <Properties>
@@ -507,6 +520,10 @@
                               <EmptySpace max="32767" attributes="0"/>
                               <Component id="next" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <Component id="csvExport" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -516,7 +533,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" pref="501" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" pref="557" max="32767" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="prev" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -531,7 +548,9 @@
                           <Component id="jLabel16" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="numRowsBox" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="101" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="csvExport" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
                       <Component id="showDataBox" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -547,6 +566,7 @@
               <SubComponents>
                 <Component class="javax.swing.JTable" name="dataTable">
                   <Properties>
+                    <Property name="autoCreateRowSorter" type="boolean" value="true"/>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                       <Connection code="model" type="code"/>
                     </Property>
@@ -614,6 +634,14 @@
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="numRowsBox.setText(Integer.toString(numRows));"/>
               </AuxValues>
+            </Component>
+            <Component class="javax.swing.JButton" name="csvExport">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Export to .csv"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="csvExportActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

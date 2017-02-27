@@ -900,6 +900,7 @@ public class DataEntryForm extends javax.swing.JFrame {
                          rs.getString("nta_description") + "\n");
         }
         
+        writer.flush();
         writer.close();
         
         JOptionPane.showMessageDialog(null, "CSV File Created");
