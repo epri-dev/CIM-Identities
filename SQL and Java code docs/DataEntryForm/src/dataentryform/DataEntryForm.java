@@ -11,6 +11,7 @@ import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.SwingUtilities;
@@ -36,7 +38,6 @@ public class DataEntryForm extends javax.swing.JFrame {
     String host = "jdbc:postgresql://localhost:5432/CIMIdentity";
     String uName = "postgres";
     String uPass; 
-    //TreeSet forCombo = new TreeSet();
     ArrayList<String> forCombo = new ArrayList<>();
     boolean uuidEntered = false;
     boolean enterPressed = false;
@@ -238,7 +239,7 @@ public class DataEntryForm extends javax.swing.JFrame {
     //Send text entered to SQL database
     public void dbInsert(String n_nameNew, String nt_nameNew, String nt_desNew, String nta_nameNew, String nta_desNew){
        
-        try{
+        try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
             Statement stmt = con.createStatement();
         
@@ -439,19 +440,44 @@ public class DataEntryForm extends javax.swing.JFrame {
         buttonGroup1.add(gen_uuidSel);
         gen_uuidSel.setSelected(true);
         gen_uuidSel.setText("Randomly Generate");
+        gen_uuidSel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                gen_uuidSelActionPerformed(evt);
+            }
+        });
 
         buttonGroup1.add(enter_uuidSel);
         enter_uuidSel.setText("Enter Here:");
+        enter_uuidSel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                enter_uuidSelActionPerformed(evt);
+            }
+        });
 
         buttonGroup2.add(Insert);
         Insert.setSelected(true);
         Insert.setText("Insert");
+        Insert.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                InsertActionPerformed(evt);
+            }
+        });
 
         buttonGroup2.add(Modify);
         Modify.setText("Modify");
+        Modify.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ModifyActionPerformed(evt);
+            }
+        });
 
         buttonGroup2.add(Delete);
         Delete.setText("Delete");
+        Delete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DeleteActionPerformed(evt);
+            }
+        });
 
         enterButton.setText("Submit");
         enterButton.addActionListener(new java.awt.event.ActionListener() {
@@ -756,11 +782,13 @@ public class DataEntryForm extends javax.swing.JFrame {
         //call dbModify() if Modify radio button is checked
         //Rewrites the record with all data on screen
         else if (Modify.isSelected() && enter_uuidSel.isSelected() ) {
+            uuidEntered = true;
             dbModify(n_nameNew, nt_nameNew, nt_desNew, nta_nameNew, nta_desNew, mRID);
         }
         //call dbDelete() if Delete radio button is checked
         //only requires the mRID due to cascade deletes
         else if ( Delete.isSelected() && enter_uuidSel.isSelected() ) {
+            uuidEntered = true;
             dbDelete(mRID);
         }  else {
             JOptionPane.showMessageDialog( null, "Invalid argument" );
@@ -844,10 +872,14 @@ public class DataEntryForm extends javax.swing.JFrame {
     }//GEN-LAST:event_nextActionPerformed
 
     private void csvExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_csvExportActionPerformed
-        String csvFile = "CIMIdentities.csv";
+
+        JFileChooser chooser = new JFileChooser();
+        chooser.setCurrentDirectory(new File("/home/me/Documents"));
+        int retrival = chooser.showSaveDialog(null);
+        if (retrival == JFileChooser.APPROVE_OPTION) {
         try {
             
-        FileWriter writer = new FileWriter(csvFile);
+        FileWriter writer = new FileWriter(chooser.getSelectedFile()+".csv");
         Connection con = DriverManager.getConnection(host, uName, uPass);           
         Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE, ResultSet.FETCH_UNKNOWN);
         String query = "SELECT *" +
@@ -870,12 +902,87 @@ public class DataEntryForm extends javax.swing.JFrame {
         
         writer.close();
         
-        JOptionPane.showMessageDialog(null, "CIMIdentities.csv created in project directory");
+        JOptionPane.showMessageDialog(null, "CSV File Created");
         
         } catch(IOException | SQLException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         } 
+        }
     }//GEN-LAST:event_csvExportActionPerformed
+
+    private void DeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteActionPerformed
+        //clear all text fields and set to uneditable
+        n_nameBox.setText("");
+        n_nameBox.setEditable(false);
+        n_nameBox.setVisible(false);
+        nt_nameBox.setText("");
+        nt_nameBox.setEditable(false);
+        nt_nameBox.setVisible(false);
+        nt_desBox.setText("");
+        nt_desBox.setEditable(false);
+        nt_desBox.setVisible(false);
+        nta_nameBox.setText("");
+        nta_nameBox.setEditable(false);
+        nta_nameBox.setVisible(false);
+        nta_desBox.setText("");
+        nta_desBox.setEditable(false);
+        nta_desBox.setVisible(false);
+        
+        n_name.setSelectedItem("");
+        nt_namecb.setSelectedItem("");
+        nt_descb.setSelectedItem("");
+        nta_namecb.setSelectedItem("");
+        nta_descb.setSelectedItem("");
+        
+        enter_uuidSel.setSelected(true);
+        gen_uuidSel.setEnabled(false);
+    }//GEN-LAST:event_DeleteActionPerformed
+
+    private void InsertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InsertActionPerformed
+
+        n_nameBox.setVisible(true);
+        nt_nameBox.setVisible(true);
+        nt_desBox.setVisible(true);
+        nta_nameBox.setVisible(true);
+        nta_desBox.setVisible(true);
+        
+        n_nameBox.setEditable(true);
+        nt_nameBox.setEditable(true);
+        nt_desBox.setEditable(true);
+        nta_nameBox.setEditable(true);
+        nta_desBox.setEditable(true);
+        
+        gen_uuidSel.setEnabled(true);
+        gen_uuidSel.setSelected(true);
+        uuidEntered = false;
+        
+    }//GEN-LAST:event_InsertActionPerformed
+
+    private void ModifyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ModifyActionPerformed
+        n_nameBox.setEditable(true);
+        nt_nameBox.setEditable(true);
+        nt_desBox.setEditable(true);
+        nta_nameBox.setEditable(true);
+        nta_desBox.setEditable(true);
+        
+        n_nameBox.setVisible(true);
+        nt_nameBox.setVisible(true);
+        nt_desBox.setVisible(true);
+        nta_nameBox.setVisible(true);
+        nta_desBox.setVisible(true);
+        
+        enter_uuidSel.setSelected(true);
+        gen_uuidSel.setEnabled(false);
+   
+    }//GEN-LAST:event_ModifyActionPerformed
+
+    private void enter_uuidSelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enter_uuidSelActionPerformed
+        uuidEntered = true;
+    }//GEN-LAST:event_enter_uuidSelActionPerformed
+
+    private void gen_uuidSelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gen_uuidSelActionPerformed
+        uuidEntered = false;
+    }//GEN-LAST:event_gen_uuidSelActionPerformed
 
     /**
      * @param args the command line arguments

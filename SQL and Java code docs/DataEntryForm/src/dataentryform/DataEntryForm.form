@@ -411,6 +411,9 @@
                 <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" value="Randomly Generate"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="gen_uuidSelActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JRadioButton" name="enter_uuidSel">
               <Properties>
@@ -419,6 +422,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Enter Here:"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="enter_uuidSelActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JRadioButton" name="Insert">
               <Properties>
@@ -428,6 +434,9 @@
                 <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" value="Insert"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="InsertActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JRadioButton" name="Modify">
               <Properties>
@@ -436,6 +445,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Modify"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ModifyActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JRadioButton" name="Delete">
               <Properties>
@@ -444,6 +456,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Delete"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="DeleteActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="enterButton">
               <Properties>
