@@ -937,6 +937,7 @@ public class DataEntryForm extends javax.swing.JFrame {
         
         enter_uuidSel.setSelected(true);
         gen_uuidSel.setEnabled(false);
+        uuidEntered = true;
     }//GEN-LAST:event_DeleteActionPerformed
 
     private void InsertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InsertActionPerformed
@@ -974,6 +975,7 @@ public class DataEntryForm extends javax.swing.JFrame {
         
         enter_uuidSel.setSelected(true);
         gen_uuidSel.setEnabled(false);
+        uuidEntered = true;
    
     }//GEN-LAST:event_ModifyActionPerformed
 
