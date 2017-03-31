@@ -5,12 +5,6 @@
  */
 package dataentryform;
 
-import java.awt.Component;
-import java.awt.Window;
-import java.awt.event.HierarchyEvent;
-import java.awt.event.HierarchyListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -25,8 +19,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -546,8 +538,8 @@ public class DataEntryForm extends javax.swing.JFrame {
                                         .addGroup(jPanel1Layout.createSequentialGroup()
                                             .addComponent(enter_uuidSel)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(enter_uuidBox, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                        .addGap(0, 116, Short.MAX_VALUE)))
+                                            .addComponent(enter_uuidBox, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                        .addGap(0, 115, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -856,19 +848,23 @@ public class DataEntryForm extends javax.swing.JFrame {
     }//GEN-LAST:event_numRowsBoxActionPerformed
 
     private void prevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevActionPerformed
-        if ( Integer.parseInt( curPageBox.getText() ) != 1 ) {
-            curPage -= 1;
-            curPageBox.setText(Integer.toString(curPage));
-            createTable();
-        }
+        
+            if ( Integer.parseInt( curPageBox.getText() ) != 1 ) {
+                curPage -= 1;
+                curPageBox.setText(Integer.toString(curPage));
+                createTable();
+            }
+        
     }//GEN-LAST:event_prevActionPerformed
 
     private void nextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextActionPerformed
-        if ( Integer.parseInt( curPageBox.getText() ) != Integer.parseInt( totalPageBox.getText()) ) {
-            curPage += 1;
-            curPageBox.setText(Integer.toString(curPage));
-            createTable();
-        }
+
+            if ( Integer.parseInt( curPageBox.getText() ) != Integer.parseInt( totalPageBox.getText()) ) {
+                curPage += 1;
+                curPageBox.setText(Integer.toString(curPage));
+                createTable();
+            }
+        
     }//GEN-LAST:event_nextActionPerformed
 
     private void csvExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_csvExportActionPerformed
@@ -1014,52 +1010,10 @@ public class DataEntryForm extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
-        JPasswordField pwd = new JPasswordField(20);
-        pwd.addHierarchyListener(new HierarchyListener() 
-        {
-            public void hierarchyChanged(HierarchyEvent e) 
-                {
-                     final Component c = e.getComponent();
-                        if (c.isShowing() && (e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0) 
-                        {
-                                Window toplevel = SwingUtilities.getWindowAncestor(c);
-                                toplevel.addWindowFocusListener(new WindowAdapter() 
-                                {
-                                         public void windowGainedFocus(WindowEvent e) 
-                                        {
-                                            c.requestFocus();
-                                        }
-                                });
-                        }
-                }
-        });
-        int action = JOptionPane.showConfirmDialog(null, pwd,"Enter PostgreSQL Password",JOptionPane.OK_CANCEL_OPTION);
-        if (action < 0) {
-            JOptionPane.showMessageDialog(null,"Cancel, X or Escape key selected");
-            System.exit(0);
-        }
+        //Create splash-screen window user can accept or deny.
+        //if accept, continue, if deny, exit program
+        new Splash();
         
-       String passw = new String(pwd.getPassword());
-       
-       Connection s = null;
-       
-       try {
-
-         s = DriverManager.getConnection("jdbc:postgresql://localhost:5432/CIMIdentity", "postgres", passw);
-       
-         } catch ( Exception e ) {
-         JOptionPane.showMessageDialog( null, e.getClass().getName()+": "+ e.getMessage() );
-         System.exit(0);
-         }
-       
-       /* End password acquisition */
-       
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new DataEntryForm(passw).setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
