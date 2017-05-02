@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://iec.ch/TC57/2016/CIMIdentitiesMessage" 
            xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-           xmlns:msg="http://iec.ch/TC57/2016/schema/message" 
+           xmlns:msg="http://iec.ch/TC57/2011/schema/message" 
            xmlns:obj="http://www.epri.com/2016/CIMIdentities#" 
            targetNamespace="http://iec.ch/TC57/2016/CIMIdentitiesMessage" 
            elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0.0">
   <!-- Base Message Definitions -->
-  <xs:import namespace="http://iec.ch/TC57/2016/schema/message" schemaLocation="message.xsd"/>
+  <xs:import namespace="http://iec.ch/TC57/2011/schema/message" schemaLocation="message.xsd"/>
   <!-- CIM Information Object Definition -->
   <xs:import namespace="http://www.epri.com/2016/CIMIdentities#" schemaLocation="CIMIdentities.xsd"/>
   <!-- PayloadType Definition -->

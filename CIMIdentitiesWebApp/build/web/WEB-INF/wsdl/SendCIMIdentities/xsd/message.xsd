@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns="http://iec.ch/TC57/2016/schema/message" 
+<xs:schema xmlns="http://iec.ch/TC57/2011/schema/message" 
            xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-           targetNamespace="http://iec.ch/TC57/2016/schema/message" 
+           targetNamespace="http://iec.ch/TC57/2011/schema/message" 
            elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0.0">
 	<xs:complexType name="RequestType">
 		<xs:annotation>
