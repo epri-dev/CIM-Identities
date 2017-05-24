@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="file:/C:/Users/pdlo003/Documents/NetBeansProjects/CIMIdentitiesWebApp/build/web/WEB-INF/wsdl/SendCIMIdentities/Send_Receive_Reply_CIMIdentities.wsdl" uri="src/conf/xml-resources/web-services/CIMIdentities/wsdl/Send_Receive_Reply_CIMIdentities.wsdl"/>
+    <system systemId="file:/C:/Users/pdlo003/Documents/NetBeansProjects/CIMIdentitiesWebApp/build/web/WEB-INF/wsdl/SendCIMIdentities/xsd/CIMIdentitiesMessage.xsd" uri="src/conf/xml-resources/web-services/CIMIdentities/wsdl/xsd/CIMIdentitiesMessage.xsd"/>
+    <system systemId="file:/C:/Users/pdlo003/Documents/NetBeansProjects/CIMIdentitiesWebApp/build/web/WEB-INF/wsdl/SendCIMIdentities/xsd/message.xsd" uri="src/conf/xml-resources/web-services/CIMIdentities/wsdl/xsd/message.xsd"/>
+    <system systemId="file:/C:/Users/pdlo003/Documents/NetBeansProjects/CIMIdentitiesWebApp/build/web/WEB-INF/wsdl/SendCIMIdentities/Get_CIMIdentities.wsdl" uri="src/conf/xml-resources/web-services/GetCIMIdentities/wsdl/Get_CIMIdentities.wsdl"/>
+    <system systemId="file:/C:/Users/pdlo003/Documents/NetBeansProjects/CIMIdentitiesWebApp/build/web/WEB-INF/wsdl/SendCIMIdentities/GetCIMIdentities.wsdl" uri="src/conf/xml-resources/web-services/GetCIMIdentities/wsdl/GetCIMIdentities.wsdl"/>
+    <system systemId="file:/C:/Users/pdlo003/Documents/NetBeansProjects/CIMIdentitiesWebApp/build/web/WEB-INF/wsdl/SendCIMIdentities/xsd/GetCIMIdentitiesMessage.xsd" uri="src/conf/xml-resources/web-services/GetCIMIdentities/wsdl/xsd/GetCIMIdentitiesMessage.xsd"/>
+    <system systemId="file:/C:/Users/pdlo003/Documents/NetBeansProjects/CIMIdentitiesWebApp/build/web/WEB-INF/wsdl/SendCIMIdentities/xsd/CIMIdentities.xsd" uri="src/conf/xml-resources/web-services/GetCIMIdentities/wsdl/xsd/CIMIdentities.xsd"/>
+    <system systemId="file:/C:/Users/pdlo003/Documents/NetBeansProjects/CIMIdentitiesWebApp/build/web/WEB-INF/wsdl/SendCIMIdentities/xsd/Message.xsd" uri="src/conf/xml-resources/web-services/GetCIMIdentities/wsdl/xsd/Message.xsd"/>
+    <system systemId="file:/C:/Users/pdlo003/Documents/wsdl/CIMIdentities_Query_WSDL.wsdl" uri="src/conf/xml-resources/web-services/GetCIMIdentities/wsdl/CIMIdentities_Query_WSDL.wsdl"/>
+    <system systemId="file:/C:/Users/pdlo003/Documents/wsdl/xsd/CIMIdentitiesQueriesMessage.xsd" uri="src/conf/xml-resources/web-services/GetCIMIdentities/wsdl/xsd/CIMIdentitiesQueriesMessage.xsd"/>
+    <system systemId="file:/C:/Users/pdlo003/Documents/wsdl/xsd/CIMIdentitiesQueries.xsd" uri="src/conf/xml-resources/web-services/GetCIMIdentities/wsdl/xsd/CIMIdentitiesQueries.xsd"/>
+    <system systemId="file:/C:/Users/pdlo003/Documents/wsdl/xsd/Message.xsd" uri="src/conf/xml-resources/web-services/GetCIMIdentities/wsdl/xsd/Message.xsd"/>
+    <system systemId="file:/C:/Users/pdlo003/Documents/wsdl/xsd/CIMIdentities.xsd" uri="src/conf/xml-resources/web-services/GetCIMIdentities/wsdl/xsd/CIMIdentities.xsd"/>
+</catalog>

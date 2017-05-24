@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="http://schemas.xmlsoap.org/wsdl/" uri="schemas.xmlsoap.org/wsdl/index.xsd"/>
+    <system systemId="http://ws-i.org/schemas/conformanceClaim/" uri="ws-i.org/schemas/conformanceclaim/index.xml"/>
+    <system systemId="http://schemas.xmlsoap.org/wsdl/soap/" uri="schemas.xmlsoap.org/wsdl/soap/index.xsd"/>
+    <system systemId="http://schemas.xmlsoap.org/wsdl/http/" uri="schemas.xmlsoap.org/wsdl/http/index.xsd"/>
+    <system systemId="http://schemas.xmlsoap.org/wsdl/mime/" uri="schemas.xmlsoap.org/wsdl/mime/index.xsd"/>
+    <system systemId="http://schemas.xmlsoap.org/soap/encoding/" uri="schemas.xmlsoap.org/soap/encoding/index.xsd"/>
+    <system systemId="http://www.w3.org/ns/sawsdl" uri="www.w3.org/ns/sawsdl.xsd"/>
+</catalog>

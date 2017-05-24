@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:tns="http://iec.ch/TC57/2016/SendCIMIdentities" 
+                  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" 
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+                  xmlns:wsi="http://ws-i.org/schemas/conformanceClaim/" 
+                  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+                  xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" 
+                  xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" 
+                  xmlns:infoMessage="http://iec.ch/TC57/2016/CIMIdentitiesMessage" 
+                  name="SendCIMIdentities" targetNamespace="http://iec.ch/TC57/2016/SendCIMIdentities">
+	<wsdl:types>
+		<xs:schema targetNamespace="http://127.0.0.1:9090/CIMIdentitiesWebApp/SendCIMIdentities" elementFormDefault="qualified">
+			<xs:import namespace="http://iec.ch/TC57/2016/CIMIdentitiesMessage" schemaLocation="xsd/CIMIdentitiesMessage.xsd"/>
+		</xs:schema>
+	</wsdl:types>
+	<wsdl:message name="CreatedCIMIdentitiesEventMessage">
+		<wsdl:part name="CreatedCIMIdentitiesEventMessage" element="infoMessage:CreatedCIMIdentities"/>
+	</wsdl:message>
+	<wsdl:message name="ChangedCIMIdentitiesEventMessage">
+		<wsdl:part name="ChangedCIMIdentitiesEventMessage" element="infoMessage:ChangedCIMIdentities"/>
+	</wsdl:message>
+	<wsdl:message name="ClosedCIMIdentitiesEventMessage">
+		<wsdl:part name="ClosedCIMIdentitiesEventMessage" element="infoMessage:ClosedCIMIdentities"/>
+	</wsdl:message>
+	<wsdl:message name="CanceledCIMIdentitiesEventMessage">
+		<wsdl:part name="CanceledCIMIdentitiesEventMessage" element="infoMessage:CanceledCIMIdentities"/>
+	</wsdl:message>
+	<wsdl:message name="DeletedCIMIdentitiesEventMessage">
+		<wsdl:part name="DeletedCIMIdentitiesEventMessage" element="infoMessage:DeletedCIMIdentities"/>
+	</wsdl:message>
+	<wsdl:message name="ResponseMessage">
+		<wsdl:part name="ResponseMessage" element="infoMessage:CIMIdentitiesResponseMessage"/>
+	</wsdl:message>
+	<wsdl:message name="FaultMessage">
+		<wsdl:part name="FaultMessage" element="infoMessage:CIMIdentitiesFaultMessage"/>
+	</wsdl:message>
+	<wsdl:portType name="CIMIdentities_Port">
+		<wsdl:operation name="CreatedCIMIdentities">
+			<wsdl:input name="CreatedCIMIdentitiesEvent" message="tns:CreatedCIMIdentitiesEventMessage"/>
+			<wsdl:output name="CreatedCIMIdentitiesResponse" message="tns:ResponseMessage"/>
+			<wsdl:fault name="CreatedCIMIdentitiesFault" message="tns:FaultMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="ChangedCIMIdentities">
+			<wsdl:input name="ChangedCIMIdentitiesEvent" message="tns:ChangedCIMIdentitiesEventMessage"/>
+			<wsdl:output name="ChangedCIMIdentitiesResponse" message="tns:ResponseMessage"/>
+			<wsdl:fault name="ChangedCIMIdentitiesFault" message="tns:FaultMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="CanceledCIMIdentities">
+			<wsdl:input name="CanceledCIMIdentitiesEvent" message="tns:CanceledCIMIdentitiesEventMessage"/>
+			<wsdl:output name="CanceledCIMIdentitiesResponse" message="tns:ResponseMessage"/>
+			<wsdl:fault name="CanceledCIMIdentitiesFault" message="tns:FaultMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="ClosedCIMIdentities">
+			<wsdl:input name="ClosedCIMIdentitiesEvent" message="tns:ClosedCIMIdentitiesEventMessage"/>
+			<wsdl:output name="ClosedCIMIdentitiesResponse" message="tns:ResponseMessage"/>
+			<wsdl:fault name="ClosedCIMIdentitiesFault" message="tns:FaultMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="DeletedCIMIdentities">
+			<wsdl:input name="DeletedCIMIdentitiesEvent" message="tns:DeletedCIMIdentitiesEventMessage"/>
+			<wsdl:output name="DeletedCIMIdentitiesResponse" message="tns:ResponseMessage"/>
+			<wsdl:fault name="DeletedCIMIdentitiesFault" message="tns:FaultMessage"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="CIMIdentities_Binding" type="tns:CIMIdentities_Port">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="CreatedCIMIdentities">
+			<soap:operation soapAction="http://iec.ch/TC57/2016/CIMIdentities/CreatedCIMIdentities" style="document"/>
+			<wsdl:input name="CreatedCIMIdentitiesEvent">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="CreatedCIMIdentitiesResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="CreatedCIMIdentitiesFault">
+				<soap:fault name="CreatedCIMIdentitiesFault" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="ChangedCIMIdentities">
+			<soap:operation soapAction="http://iec.ch/TC57/2016/CIMIdentities/ChangedCIMIdentities" style="document"/>
+			<wsdl:input name="ChangedCIMIdentitiesEvent">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="ChangedCIMIdentitiesResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="ChangedCIMIdentitiesFault">
+				<soap:fault name="ChangedCIMIdentitiesFault" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="CanceledCIMIdentities">
+			<soap:operation soapAction="http://iec.ch/TC57/2016/CIMIdentities/CanceledCIMIdentities" style="document"/>
+			<wsdl:input name="CanceledCIMIdentitiesEvent">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="CanceledCIMIdentitiesResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="CanceledCIMIdentitiesFault">
+				<soap:fault name="CanceledCIMIdentitiesFault" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="ClosedCIMIdentities">
+			<soap:operation soapAction="http://iec.ch/TC57/2016/CIMIdentities/ClosedCIMIdentities" style="document"/>
+			<wsdl:input name="ClosedCIMIdentitiesEvent">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="ClosedCIMIdentitiesResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="ClosedCIMIdentitiesFault">
+				<soap:fault name="ClosedCIMIdentitiesFault" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="DeletedCIMIdentities">
+			<soap:operation soapAction="http://iec.ch/TC57/2016/CIMIdentities/DeletedCIMIdentities" style="document"/>
+			<wsdl:input name="DeletedCIMIdentitiesEvent">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="DeletedCIMIdentitiesResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="DeletedCIMIdentitiesFault">
+				<soap:fault name="DeletedCIMIdentitiesFault" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="SendCIMIdentities">
+		<wsdl:port name="CIMIdentities_Port" binding="tns:CIMIdentities_Binding">
+			<soap:address location="http://localhost:8080/CIMIdentitiesWebApp/SendCIMIdentities"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

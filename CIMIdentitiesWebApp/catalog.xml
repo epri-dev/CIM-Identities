@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
-    <system systemId="file:/C:/Users/pdlo003/Documents/Send_Receive_Reply_CIMIdentities.wsdl" uri="src/conf/xml-resources/web-services/SendCIMIdentities/wsdl/Send_Receive_Reply_CIMIdentities.wsdl"/>
-    <system systemId="file:/C:/Users/pdlo003/Documents/xsd/CIMIdentitiesMessage.xsd" uri="src/conf/xml-resources/web-services/SendCIMIdentities/wsdl/xsd/CIMIdentitiesMessage.xsd"/>
-    <system systemId="file:/C:/Users/pdlo003/Documents/xsd/message.xsd" uri="src/conf/xml-resources/web-services/SendCIMIdentities/wsdl/xsd/message.xsd"/>
-    <system systemId="file:/C:/Users/pdlo003/Documents/xsd/CIMIdentities.xsd" uri="src/conf/xml-resources/web-services/SendCIMIdentities/wsdl/xsd/CIMIdentities.xsd"/>
-</catalog>
