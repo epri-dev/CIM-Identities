@@ -31,3 +31,6 @@ Contains the following subdirectories:
 
 ### CIMIdentities-w
 * This is the functional version of the contract-first approach of creating a SOAP Web Service following the IEC 61968-100 standard.  This project consists of two separate web services:  one for handling create/change/delete requests, and another for get/query requests.  This can be used through a client application or SOAP UI.
+
+### CIMIdentities-c
+* This is the client application for CIMIdentities-w.  It contains a launchable executable behave similarly to the DataEntryFrom application.  By setting the appropriate URL in place of localhost and maintaining a deployed web service, this can be accessed from any Internet-connected device.
