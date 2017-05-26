@@ -1,0 +1,40 @@
+<!-- TOOLBAR_EXEMPT -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:xlink="http://www.w3.org/1999/xlink" 
+      xmlns:rddl="http://www.rddl.org/"
+      xml:lang="en" lang="en">
+<head>
+  <title>Conformance Claim Attachment Mechanisms Version 1.0</title>
+  <link href="http://www.rddl.org/xrd.css" type="text/css" rel="stylesheet" />
+</head>
+
+<body>
+    <h1>Conformance Claim Attachment Mechanisms Version 1.0</h1>
+
+  <p>November 15, 2004</p>
+
+  <h2>Introduction</h2>
+  <p>This document is a directory of links to resources related to the WS-I Conformance Claim Attachment Mechanisms.</p>
+
+  <h2>Schema for Conformance Claims:</h2>
+  <rddl:resource
+    id='ConformanceClaim_Schema'
+    xlink:title='Conformance claim schema document'
+    xlink:role='http://www.w3.org/2001/XMLSchema' 
+    xlink:arcrole='http://www.rddl.org/purposes#schema-validation' 
+    xlink:href='conformanceClaim.xsd' 
+    xlink:type='simple' 
+    xlink:show='none' 
+    xlink:actuate='none'>
+    <p><a href="http://ws-i.org/schemas/ConformanceClaim/ConformanceClaim.xsd"
+               >http://ws-i.org/schemas/ConformanceClaim/ConformanceClaim.xsd</a></p>
+  </rddl:resource>
+
+  <h2>Specification:</h2>
+  <p>
+  <a href="http://www.ws-i.org/Profiles/ConformanceClaims-1.0.html"
+          >The Conformance Claims Attachment Mechansisms specification</a>
+  </p>
+</body>
+</html>
