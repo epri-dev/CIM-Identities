@@ -20,12 +20,16 @@ import com.epri._2016.cimidentities.IdentifiedObject;
 import com.epri._2016.cimidentities.Name;
 import com.epri._2016.cimidentities.NameType;
 import com.epri._2016.cimidentities.NameTypeAuthority;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -54,6 +58,13 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
      * Creates new form CIMIdentitiesClient
      */
     public CIMIdentitiesClient() {
+        createResponse();
+        initComponents();
+        setLocationRelativeTo(null);  //centers the application on screen
+        createTable();
+    }
+    
+    public void createResponse() {
         HeaderType header = new HeaderType();
         header.setNoun("CIMIdentities");
         header.setVerb("get");
@@ -77,35 +88,80 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
             Logger.getLogger(CIMIdentitiesClient.class.getName()).log(Level.SEVERE, null, ex);
         }
         responseSize = response.getPayload().getCIMIdentities().getCIMIdentity().size();
-        initComponents();
-        setLocationRelativeTo(null);  //centers the application on screen
+    }
+    
+    public void createTable() {
+        curPage = Integer.parseInt(curPageBox.getText());
+        numRows = Integer.parseInt(numRowsBox.getText());
+        int index = 0;
+        DefaultTableModel Model = new DefaultTableModel();
+        Object[] colName = new Object[6];
+        colName[0] = "mRID";
+        colName[1] = "Name";
+        colName[2] = "NT Name";
+        colName[3] = "NT Des";
+        colName[4] = "NTA Name";
+        colName[5] = "NTA Des";
+        Model.setColumnIdentifiers(colName);
+        
+        createResponse();
+        
+        Object[] rowData = new Object[6];
+        for (int i = 0; i < responseSize; i++) {
+            rowData[0] = response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getIdentifiedObject().getMRID();
+            rowData[1] = response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getName();
+            rowData[2] = response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getName();
+            rowData[3] = response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getDescription();
+            rowData[4] = response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getNameTypeAuthority().getName();
+            rowData[5] = response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getNameTypeAuthority().getDescription();
+            Model.addRow(rowData);
+        }
+        //now we add obtain the total number of rows:
+           int totalRows = Model.getRowCount();
+           //using that total number of rows, we computer the number of pages
+           totalPage = (totalRows/numRows) + 1;
+           totalPageBox.setText(Integer.toString(totalPage));
+           
+           //move index to starting value in current page
+           index = ((curPage-1) * numRows);
+           //now loop through the result set adding to new model
+           DefaultTableModel newModel = new DefaultTableModel();
+           newModel.setColumnIdentifiers(colName);
+           if ((curPage != totalPage) && (curPage < totalPage) && (curPage >= 1)) {
+                for (int i = numRows; i > 0; i--) {
+                  rowData[0] = response.getPayload().getCIMIdentities().getCIMIdentity().get(index).getIdentifiedObject().getMRID();
+                  rowData[1] = response.getPayload().getCIMIdentities().getCIMIdentity().get(index).getNames().get(0).getName();
+                  rowData[2] = response.getPayload().getCIMIdentities().getCIMIdentity().get(index).getNames().get(0).getNameType().getName();
+                  rowData[3] = response.getPayload().getCIMIdentities().getCIMIdentity().get(index).getNames().get(0).getNameType().getDescription();
+                  rowData[4] = response.getPayload().getCIMIdentities().getCIMIdentity().get(index).getNames().get(0).getNameType().getNameTypeAuthority().getName();
+                  rowData[5] = response.getPayload().getCIMIdentities().getCIMIdentity().get(index).getNames().get(0).getNameType().getNameTypeAuthority().getDescription();
+                  newModel.addRow(rowData);
+                  index++;
+           }
+           } else if (curPage == totalPage) { 
+               for (int i = (totalRows % numRows); i > 0; i--) {
+                  rowData[0] = response.getPayload().getCIMIdentities().getCIMIdentity().get(index).getIdentifiedObject().getMRID();
+                  rowData[1] = response.getPayload().getCIMIdentities().getCIMIdentity().get(index).getNames().get(0).getName();
+                  rowData[2] = response.getPayload().getCIMIdentities().getCIMIdentity().get(index).getNames().get(0).getNameType().getName();
+                  rowData[3] = response.getPayload().getCIMIdentities().getCIMIdentity().get(index).getNames().get(0).getNameType().getDescription();
+                  rowData[4] = response.getPayload().getCIMIdentities().getCIMIdentity().get(index).getNames().get(0).getNameType().getNameTypeAuthority().getName();
+                  rowData[5] = response.getPayload().getCIMIdentities().getCIMIdentity().get(index).getNames().get(0).getNameType().getNameTypeAuthority().getDescription();
+                  newModel.addRow(rowData);
+                  index++;
+               }
+           }
+           else {
+               JOptionPane.showMessageDialog( null, "Invalid page number");
+               return;
+           }
+           dataTable = new javax.swing.JTable();
+           dataTable.setModel(newModel);
+           jScrollPane3.setViewportView(dataTable);
     }
     
     public void populateComboBoxes() {
-        HeaderType header = new HeaderType();
-        header.setNoun("CIMIdentities");
-        header.setVerb("get");
         
-        CIMIdentitiesQueriesRequestType request = new CIMIdentitiesQueriesRequestType();
-        CIMIdentitiesQueries var = new CIMIdentitiesQueries();
-        EndDeviceGroup edg = new EndDeviceGroup();
-        edg.setMRID(null);  //can be null, '?', or '""' to receive all data, else set mRID
-        
-        
-        message.setRequest(request);
-        message.getRequest().setCIMIdentitiesQueries(var);
-        message.getRequest().getCIMIdentitiesQueries().getEndDeviceGroup().add(0, edg);
-        message.getRequest().getCIMIdentitiesQueries().getEndDeviceGroup();
-      
-        message.setHeader(header);
-        
-        try {
-            response = queryCIMIdentities(message);
-        } catch (QueryCIMIdentitiesFaultMessage ex) {
-            Logger.getLogger(CIMIdentitiesClient.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        responseSize = response.getPayload().getCIMIdentities().getCIMIdentity().size();
-        
+        createResponse();
         /* Populate Names box */
         LinkedHashSet<String> nameSet = new LinkedHashSet<String>();
         for (int i = 0; i < responseSize; i++) {
@@ -195,7 +251,19 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
         Modify = new javax.swing.JRadioButton();
         Delete = new javax.swing.JRadioButton();
         enterButton = new javax.swing.JButton();
-        jTabbedPane2 = new javax.swing.JTabbedPane();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        dataTable = new javax.swing.JTable();
+        prev = new javax.swing.JButton();
+        next = new javax.swing.JButton();
+        jLabel12 = new javax.swing.JLabel();
+        curPageBox = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        totalPageBox = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
+        numRowsBox = new javax.swing.JTextField();
+        csvExport = new javax.swing.JButton();
+        refreshButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -369,7 +437,7 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(enter_uuidBox, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(gen_uuidSel))
-                .addContainerGap(52, Short.MAX_VALUE))
+                .addContainerGap(140, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -488,7 +556,7 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
                         .addComponent(Insert)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(Modify)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(Delete))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -497,7 +565,128 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
         );
 
         jTabbedPane1.addTab("Data Entry", jPanel1);
-        jTabbedPane1.addTab("View DB", jTabbedPane2);
+
+        dataTable.setModel(model);
+        jScrollPane3.setViewportView(dataTable);
+
+        prev.setText("Previous");
+        prev.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                prevActionPerformed(evt);
+            }
+        });
+
+        next.setText("Next");
+        next.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nextActionPerformed(evt);
+            }
+        });
+
+        jLabel12.setText("Page:");
+
+        curPageBox.setText(Integer.toString(curPage));
+        curPageBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                curPageBoxActionPerformed(evt);
+            }
+        });
+
+        jLabel13.setText("of");
+
+        totalPageBox.setEditable(false);
+        totalPageBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                totalPageBoxActionPerformed(evt);
+            }
+        });
+
+        jLabel14.setText("Rows per page:");
+
+        numRowsBox.setText(Integer.toString(numRows));
+        numRowsBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                numRowsBoxActionPerformed(evt);
+            }
+        });
+
+        csvExport.setText("Export to .csv");
+        csvExport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                csvExportActionPerformed(evt);
+            }
+        });
+
+        refreshButton.setText("Refresh");
+        refreshButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 545, Short.MAX_VALUE)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(prev)
+                                .addGap(69, 69, 69)
+                                .addComponent(jLabel12)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(curPageBox, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel13)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(totalPageBox, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(next))))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addComponent(jLabel14)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(numRowsBox, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(refreshButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(csvExport)
+                .addGap(19, 19, 19))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(prev)
+                        .addComponent(next))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel12)
+                        .addComponent(curPageBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel13)
+                        .addComponent(totalPageBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel14)
+                    .addComponent(numRowsBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(62, 62, 62)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(refreshButton)
+                    .addComponent(csvExport))
+                .addGap(41, 41, 41))
+        );
+
+        jTabbedPane1.addTab("View Database", jPanel2);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -519,54 +708,6 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void nta_nameBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nta_nameBoxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nta_nameBoxActionPerformed
-
-    private void gen_uuidSelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gen_uuidSelActionPerformed
-        uuidEntered = false;
-    }//GEN-LAST:event_gen_uuidSelActionPerformed
-
-    private void enter_uuidSelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enter_uuidSelActionPerformed
-        uuidEntered = true;
-    }//GEN-LAST:event_enter_uuidSelActionPerformed
-
-    private void ModifyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ModifyActionPerformed
-        n_nameBox.setEditable(true);
-        nt_nameBox.setEditable(true);
-        nt_desBox.setEditable(true);
-        nta_nameBox.setEditable(true);
-        nta_desBox.setEditable(true);
-        
-        n_nameBox.setVisible(true);
-        nt_nameBox.setVisible(true);
-        nt_desBox.setVisible(true);
-        nta_nameBox.setVisible(true);
-        nta_desBox.setVisible(true);
-        
-        enter_uuidSel.setSelected(true);
-        gen_uuidSel.setEnabled(false);
-        uuidEntered = true;
-    }//GEN-LAST:event_ModifyActionPerformed
-
-    private void InsertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InsertActionPerformed
-        n_nameBox.setVisible(true);
-        nt_nameBox.setVisible(true);
-        nt_desBox.setVisible(true);
-        nta_nameBox.setVisible(true);
-        nta_desBox.setVisible(true);
-        
-        n_nameBox.setEditable(true);
-        nt_nameBox.setEditable(true);
-        nt_desBox.setEditable(true);
-        nta_nameBox.setEditable(true);
-        nta_desBox.setEditable(true);
-        
-        gen_uuidSel.setEnabled(true);
-        gen_uuidSel.setSelected(true);
-        uuidEntered = false;
-    }//GEN-LAST:event_InsertActionPerformed
-
     private void DeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteActionPerformed
         n_nameBox.setText("");
         n_nameBox.setEditable(false);
@@ -583,42 +724,153 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
         nta_desBox.setText("");
         nta_desBox.setEditable(false);
         nta_desBox.setVisible(false);
-        
+
         n_name.setSelectedItem("");
         nt_namecb.setSelectedItem("");
         nt_descb.setSelectedItem("");
         nta_namecb.setSelectedItem("");
         nta_descb.setSelectedItem("");
-        
+
         enter_uuidSel.setSelected(true);
         gen_uuidSel.setEnabled(false);
         uuidEntered = true;
     }//GEN-LAST:event_DeleteActionPerformed
 
-    private void n_nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_n_nameActionPerformed
-        String nameSel = (String)n_name.getSelectedItem();
-        n_nameBox.setText(nameSel);
-    }//GEN-LAST:event_n_nameActionPerformed
+    private void ModifyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ModifyActionPerformed
+        n_nameBox.setEditable(true);
+        nt_nameBox.setEditable(true);
+        nt_desBox.setEditable(true);
+        nta_nameBox.setEditable(true);
+        nta_desBox.setEditable(true);
 
-    private void nt_namecbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nt_namecbActionPerformed
-        String nameSel = (String)nt_namecb.getSelectedItem();
-        nt_nameBox.setText(nameSel);
-    }//GEN-LAST:event_nt_namecbActionPerformed
+        n_nameBox.setVisible(true);
+        nt_nameBox.setVisible(true);
+        nt_desBox.setVisible(true);
+        nta_nameBox.setVisible(true);
+        nta_desBox.setVisible(true);
 
-    private void nt_descbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nt_descbActionPerformed
-        String nameSel = (String)nt_descb.getSelectedItem();
-        nt_desBox.setText(nameSel);
-    }//GEN-LAST:event_nt_descbActionPerformed
+        enter_uuidSel.setSelected(true);
+        gen_uuidSel.setEnabled(false);
+        uuidEntered = true;
+    }//GEN-LAST:event_ModifyActionPerformed
+
+    private void InsertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InsertActionPerformed
+        n_nameBox.setVisible(true);
+        nt_nameBox.setVisible(true);
+        nt_desBox.setVisible(true);
+        nta_nameBox.setVisible(true);
+        nta_desBox.setVisible(true);
+
+        n_nameBox.setEditable(true);
+        nt_nameBox.setEditable(true);
+        nt_desBox.setEditable(true);
+        nta_nameBox.setEditable(true);
+        nta_desBox.setEditable(true);
+
+        gen_uuidSel.setEnabled(true);
+        gen_uuidSel.setSelected(true);
+        uuidEntered = false;
+    }//GEN-LAST:event_InsertActionPerformed
+
+    private void enter_uuidSelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enter_uuidSelActionPerformed
+        uuidEntered = true;
+    }//GEN-LAST:event_enter_uuidSelActionPerformed
+
+    private void gen_uuidSelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gen_uuidSelActionPerformed
+        uuidEntered = false;
+    }//GEN-LAST:event_gen_uuidSelActionPerformed
+
+    private void nta_descbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nta_descbActionPerformed
+        String nameSel = (String)nta_descb.getSelectedItem();
+        nta_desBox.setText(nameSel);
+    }//GEN-LAST:event_nta_descbActionPerformed
 
     private void nta_namecbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nta_namecbActionPerformed
         String nameSel = (String)nta_namecb.getSelectedItem();
         nta_nameBox.setText(nameSel);
     }//GEN-LAST:event_nta_namecbActionPerformed
 
-    private void nta_descbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nta_descbActionPerformed
-        String nameSel = (String)nta_descb.getSelectedItem();
-        nta_desBox.setText(nameSel);
-    }//GEN-LAST:event_nta_descbActionPerformed
+    private void nta_nameBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nta_nameBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_nta_nameBoxActionPerformed
+
+    private void nt_descbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nt_descbActionPerformed
+        String nameSel = (String)nt_descb.getSelectedItem();
+        nt_desBox.setText(nameSel);
+    }//GEN-LAST:event_nt_descbActionPerformed
+
+    private void nt_namecbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nt_namecbActionPerformed
+        String nameSel = (String)nt_namecb.getSelectedItem();
+        nt_nameBox.setText(nameSel);
+    }//GEN-LAST:event_nt_namecbActionPerformed
+
+    private void n_nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_n_nameActionPerformed
+        String nameSel = (String)n_name.getSelectedItem();
+        n_nameBox.setText(nameSel);
+    }//GEN-LAST:event_n_nameActionPerformed
+
+    private void curPageBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_curPageBoxActionPerformed
+        createTable();
+    }//GEN-LAST:event_curPageBoxActionPerformed
+
+    private void csvExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_csvExportActionPerformed
+        JFileChooser chooser = new JFileChooser();
+        chooser.setCurrentDirectory(new File("/home/me/Documents"));
+        int retrival = chooser.showSaveDialog(null);
+        if (retrival == JFileChooser.APPROVE_OPTION) {
+            
+            try {
+                FileWriter writer = new FileWriter(chooser.getSelectedFile()+".csv");
+                createResponse();
+                
+                writer.write("mRID, Name, NameType Name, NameType Description, NameTypeAuthority Name, NameTypeAuthority Description\n");
+                for (int i = 0; i < responseSize; i++) {
+                    writer.write(response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getIdentifiedObject().getMRID() + ", " +
+                    response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getName() + ", " +
+                    response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getName() + ", " +
+                    response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getDescription() + ", " +
+                    response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getNameTypeAuthority().getName() + ", " +
+                    response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getNameTypeAuthority().getDescription() + "\n");
+                    
+                }
+                
+                writer.flush();
+                writer.close();
+                
+                
+            } catch (IOException ex) {
+                Logger.getLogger(CIMIdentitiesClient.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_csvExportActionPerformed
+
+    private void prevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevActionPerformed
+        if ( Integer.parseInt( curPageBox.getText() ) != 1 ) {
+                curPage -= 1;
+                curPageBox.setText(Integer.toString(curPage));
+                createTable();
+            }
+    }//GEN-LAST:event_prevActionPerformed
+
+    private void nextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextActionPerformed
+        if ( Integer.parseInt( curPageBox.getText() ) != Integer.parseInt( totalPageBox.getText()) ) {
+                curPage += 1;
+                curPageBox.setText(Integer.toString(curPage));
+                createTable();
+            }
+    }//GEN-LAST:event_nextActionPerformed
+
+    private void numRowsBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_numRowsBoxActionPerformed
+        createTable();
+    }//GEN-LAST:event_numRowsBoxActionPerformed
+
+    private void totalPageBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_totalPageBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_totalPageBoxActionPerformed
+
+    private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
+        createTable();
+    }//GEN-LAST:event_refreshButtonActionPerformed
 
     private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
         n_nameNew = n_nameBox.getText();
@@ -807,6 +1059,7 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
         nta_namecb.removeAllItems();
         nta_descb.removeAllItems();
         
+        createTable();
         populateComboBoxes();
     }//GEN-LAST:event_enterButtonActionPerformed
 
@@ -845,6 +1098,9 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
     private javax.swing.JRadioButton Modify;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
+    private javax.swing.JButton csvExport;
+    private javax.swing.JTextField curPageBox;
+    private javax.swing.JTable dataTable;
     private javax.swing.JButton enterButton;
     private javax.swing.JFormattedTextField enter_uuidBox;
     private javax.swing.JRadioButton enter_uuidSel;
@@ -852,6 +1108,9 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -861,15 +1120,17 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JComboBox<String> n_name;
     private javax.swing.JTextField n_nameBox;
+    private javax.swing.JButton next;
     private javax.swing.JTextArea nt_desBox;
     private javax.swing.JComboBox<String> nt_descb;
     private javax.swing.JTextField nt_nameBox;
@@ -878,6 +1139,10 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> nta_descb;
     private javax.swing.JTextField nta_nameBox;
     private javax.swing.JComboBox<String> nta_namecb;
+    private javax.swing.JTextField numRowsBox;
+    private javax.swing.JButton prev;
+    private javax.swing.JButton refreshButton;
+    private javax.swing.JTextField totalPageBox;
     // End of variables declaration//GEN-END:variables
 
     private static CIMIdentitiesResponseMessageType changedCIMIdentitiesRequest(ch.iec.tc57._2016.cimidentitiesmessage.CIMIdentitiesEventMessageType changedCIMIdentitiesEventMessage) throws FaultMessage {
