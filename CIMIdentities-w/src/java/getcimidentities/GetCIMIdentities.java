@@ -66,8 +66,8 @@ public class GetCIMIdentities {
         
         try {
             String query;
-            String id = message.getHeader().getMessageID().trim();
-            if (message.getHeader().getMessageID().equals("") || message.getHeader().getMessageID().equals("?")) {
+            String uuid = message.getRequest().getCIMIdentitiesQueries().getEndDeviceGroup().get(0).getMRID();
+            if (uuid == null || uuid.equals("") || uuid.equals("?")) {
             
             query = "SELECT *" +
                            "FROM public.\"NameType\" as nt, public.\"Name\" as n, " +
@@ -79,7 +79,7 @@ public class GetCIMIdentities {
                query = "SELECT *" +
                        "FROM public.\"NameType\" as nt, public.\"Name\" as n, " +
                        "public.\"NameTypeAuthority\" as nta " +
-                       "WHERE n.n_pkey = '" + id + "' AND " +
+                       "WHERE n.n_pkey = '" + uuid + "' AND " +
                        "n.n_pkey = nt.nt_pkey AND " +
                        "nt.nt_pkey = nta.nta_pkey";
                        

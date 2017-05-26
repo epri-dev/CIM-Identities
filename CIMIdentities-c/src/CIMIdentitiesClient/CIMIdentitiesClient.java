@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -52,7 +53,7 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
     /**
      * Creates new form CIMIdentitiesClient
      */
-    public CIMIdentitiesClient() throws QueryCIMIdentitiesFaultMessage {
+    public CIMIdentitiesClient() {
         HeaderType header = new HeaderType();
         header.setNoun("CIMIdentities");
         header.setVerb("get");
@@ -70,10 +71,82 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
       
         message.setHeader(header);
         
-        response = queryCIMIdentities(message);
+        try {
+            response = queryCIMIdentities(message);
+        } catch (QueryCIMIdentitiesFaultMessage ex) {
+            Logger.getLogger(CIMIdentitiesClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
         responseSize = response.getPayload().getCIMIdentities().getCIMIdentity().size();
         initComponents();
         setLocationRelativeTo(null);  //centers the application on screen
+    }
+    
+    public void populateComboBoxes() {
+        HeaderType header = new HeaderType();
+        header.setNoun("CIMIdentities");
+        header.setVerb("get");
+        
+        CIMIdentitiesQueriesRequestType request = new CIMIdentitiesQueriesRequestType();
+        CIMIdentitiesQueries var = new CIMIdentitiesQueries();
+        EndDeviceGroup edg = new EndDeviceGroup();
+        edg.setMRID(null);  //can be null, '?', or '""' to receive all data, else set mRID
+        
+        
+        message.setRequest(request);
+        message.getRequest().setCIMIdentitiesQueries(var);
+        message.getRequest().getCIMIdentitiesQueries().getEndDeviceGroup().add(0, edg);
+        message.getRequest().getCIMIdentitiesQueries().getEndDeviceGroup();
+      
+        message.setHeader(header);
+        
+        try {
+            response = queryCIMIdentities(message);
+        } catch (QueryCIMIdentitiesFaultMessage ex) {
+            Logger.getLogger(CIMIdentitiesClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        responseSize = response.getPayload().getCIMIdentities().getCIMIdentity().size();
+        
+        /* Populate Names box */
+        LinkedHashSet<String> nameSet = new LinkedHashSet<String>();
+        for (int i = 0; i < responseSize; i++) {
+            nameSet.add(response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getName());
+        }
+        for (String entry : nameSet) {
+            n_name.addItem(entry);
+        }
+        /* Populate NameType names box */
+        Set<String> nameTypeTSet = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+        for (int i = 0; i < responseSize; i++) {
+            nameTypeTSet.add(response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getName().trim());
+        }
+        for (String entry : nameTypeTSet) {
+            nt_namecb.addItem(entry);
+        }
+        /* Populate NameType description box */
+        Set<String> nameTypeDesTSet = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+        for (int i = 0; i < responseSize; i++) {
+            nameTypeDesTSet.add(response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getDescription().trim());
+        }
+        for (String entry : nameTypeDesTSet) {
+            nt_descb.addItem(entry);
+        }
+        /* Populate NameTypeAuthority names box */
+        Set<String> nameTypeAuthTSet = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+        for (int i = 0; i < responseSize; i++) {
+            nameTypeAuthTSet.add(response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getNameTypeAuthority().getName().trim());
+        }
+        for (String entry : nameTypeAuthTSet) {
+            nta_namecb.addItem(entry);
+        }
+        /* Populate NameTypeAuthority descriptions box */
+        Set<String> nameTypeAuthDesTSet = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+        for (int i = 0; i < responseSize; i++) {
+            nameTypeAuthDesTSet.add(response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getNameTypeAuthority().getDescription().trim());
+        }
+        for (String entry : nameTypeAuthDesTSet) {
+            nta_descb.addItem(entry);
+        }
+        
     }
 
     /**
@@ -130,7 +203,6 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
 
         jLabel2.setText("Select Name");
 
-        n_name.addItem("");
         LinkedHashSet<String> nameSet = new LinkedHashSet<String>();
         for (int i = 0; i < responseSize; i++) {
             nameSet.add(response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getName());
@@ -555,7 +627,7 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
         nta_nameNew = nta_nameBox.getText();
         nta_desNew = nta_desBox.getText();
         String mRID = enter_uuidBox.getText();
-        ch.iec.tc57._2016.cimidentitiesmessage.CIMIdentitiesEventMessageType message = new ch.iec.tc57._2016.cimidentitiesmessage.CIMIdentitiesEventMessageType();
+        ch.iec.tc57._2016.cimidentitiesmessage.CIMIdentitiesEventMessageType msg = new ch.iec.tc57._2016.cimidentitiesmessage.CIMIdentitiesEventMessageType();
  
         /* create payload object out of parsed data */
         CIMIdentitiesPayloadType payload = new CIMIdentitiesPayloadType();
@@ -576,46 +648,150 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
         //set name
         Name name = new Name();
         name.setName(n_nameNew);
+        if (Delete.isSelected()) name.setName("");
+        if (name.getName() == null) name.setName("");
         cimid.getNames().add(name);
         
         //set NameType name/description
         NameType nameType = new NameType();
         nameType.setDescription(nt_desNew);
+        if (Delete.isSelected()) nameType.setDescription("");
+        if (nameType.getDescription() == null) nameType.setDescription("");
         nameType.setName(nt_nameNew);
+        if (Delete.isSelected()) nameType.setName("");
+        if (nameType.getName() == null) nameType.setName("");
         cimid.getNames().get(0).setNameType(nameType);
         
         //set NameTypeAuthority name/description
         NameTypeAuthority nameTypeAuth = new NameTypeAuthority();
         nameTypeAuth.setDescription(nta_desNew);
+        if (Delete.isSelected()) nameTypeAuth.setDescription("");
+        if (nameTypeAuth.getDescription() == null) nameTypeAuth.setDescription("");
         nameTypeAuth.setName(nta_nameNew);
+        if (Delete.isSelected()) nameTypeAuth.setName("");
+        if (nameTypeAuth.getName() == null) nameTypeAuth.setDescription("");
         cimid.getNames().get(0).getNameType().setNameTypeAuthority(nameTypeAuth);
         
         cim.add(cimid);
         
-        message.setPayload(payload);
+        msg.setPayload(payload);
         
         /* Insertion handling */
         if (Insert.isSelected()) {
             if (gen_uuidSel.isSelected()) {
                 value.setMRID("");
                 payload.getCIMIdentities().getCIMIdentity().get(0).setIdentifiedObject(value);
-                message.setPayload(payload);
+                msg.setPayload(payload);
             }
      
             HeaderType header = new HeaderType();
             header.setNoun("CIMIdentities");
             header.setVerb("create");
-            message.setHeader(header);
+            msg.setHeader(header);
             try {
-                createdCIMIdentitiesRequest(message);
+                createdCIMIdentitiesRequest(msg);
+                JOptionPane.showMessageDialog( null, "Data inserted:\n\n"
+                 + "\nName: " +  msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getName()
+                 + "\nNameType Name: " +  msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getName() 
+                 + "\nNameType Description: " + msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getDescription() 
+                 + "\nNameTypeAuthority Name: " +  msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getNameTypeAuthority().getName() 
+                 + "\nNameTypeAuthority Description: " + msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getNameTypeAuthority().getDescription());
             } catch (FaultMessage ex) {
                 Logger.getLogger(CIMIdentitiesClient.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         
-        /* Modification handling */
+        /* deletion handling */
+        if (Delete.isSelected() && enter_uuidSel.isSelected()) {
+            uuidEntered = true;
+            HeaderType header = new HeaderType();
+            header.setNoun("CIMIdentities");
+            header.setVerb("delete");
+            msg.setHeader(header);
+            
+            /* query the server for the mRID being deleted */
+            CIMIdentitiesQueriesRequestType request = new CIMIdentitiesQueriesRequestType();
+            CIMIdentitiesQueries var = new CIMIdentitiesQueries();
+            EndDeviceGroup edg = new EndDeviceGroup();
+            edg.setMRID(mRID);  //can be null, '?', or '""' to receive all data, else set mRID
         
-        /* Deletion handling */
+        
+            message.setRequest(request);
+            message.getRequest().setCIMIdentitiesQueries(var);
+            message.getRequest().getCIMIdentitiesQueries().getEndDeviceGroup().add(0, edg);
+            message.getRequest().getCIMIdentitiesQueries().getEndDeviceGroup();
+            
+            try {
+                response = queryCIMIdentities(message);
+            } catch (QueryCIMIdentitiesFaultMessage ex) {
+                Logger.getLogger(CIMIdentitiesClient.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            /* set outgoing deletion message to contain ALL data about the mRID */
+            msg.getPayload().setCIMIdentities(response.getPayload().getCIMIdentities());
+            
+            try {
+                deletedCIMIdentitiesRequest(msg);
+                JOptionPane.showMessageDialog( null,
+                "Data deleted:\n\n"
+                 + "mRID: " + response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getIdentifiedObject().getMRID()
+                 + "\nName: " +  response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getName()
+                 + "\nNameType Name: " +  response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getName() 
+                 + "\nNameType Description: " + response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getDescription() 
+                 + "\nNameTypeAuthority Name: " +  response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getNameTypeAuthority().getName() 
+                 + "\nNameTypeAuthority Description: " + response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getNameTypeAuthority().getDescription());
+                        
+            } catch (FaultMessage ex) {
+                JOptionPane.showMessageDialog( null, ex.getMessage() );
+                Logger.getLogger(CIMIdentitiesClient.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        /* modification handling */
+        if (Modify.isSelected()) {
+            HeaderType header = new HeaderType();
+            header.setNoun("CIMIdentities");
+            header.setVerb("change");
+            msg.setHeader(header);
+            
+            /* query the server for the mRID being modified */
+            CIMIdentitiesQueriesRequestType request = new CIMIdentitiesQueriesRequestType();
+            CIMIdentitiesQueries var = new CIMIdentitiesQueries();
+            EndDeviceGroup edg = new EndDeviceGroup();
+            edg.setMRID(mRID);  //can be null, '?', or '""' to receive all data, else set mRID
+        
+        
+            message.setRequest(request);
+            message.getRequest().setCIMIdentitiesQueries(var);
+            message.getRequest().getCIMIdentitiesQueries().getEndDeviceGroup().add(0, edg);
+            message.getRequest().getCIMIdentitiesQueries().getEndDeviceGroup();
+            
+            try {
+                response = queryCIMIdentities(message);
+            } catch (QueryCIMIdentitiesFaultMessage ex) {
+                Logger.getLogger(CIMIdentitiesClient.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                changedCIMIdentitiesRequest(msg);
+                JOptionPane.showMessageDialog( null,
+                "Data modified:\n\n"
+                 + "mRID: " + msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getIdentifiedObject().getMRID()
+                 + "\nPrevious Name: " + response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getName()  
+                 + "\nPrevious NameType Name: " + response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getName()   
+                 + "\nPrevious NameType Description: " + response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getDescription()  
+                 + "\nPrevoius NameTypeAuthority Name: " + response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getNameTypeAuthority().getName()    
+                 + "\nPrevious NameTypeAuthority Description: " + response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getNameTypeAuthority().getDescription()
+                        
+                 + "\n\n\nNew Name: " +  msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getName()                 
+                 + "\nNew NameType Name: " +  msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getName()                       
+                 + "\nNew NameType Description: " + msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getDescription()                  
+                 + "\nNew NameTypeAuthority Name: " +  msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getNameTypeAuthority().getName()                  
+                 + "\nNew NameTypeAuthority Description: " + msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getNameTypeAuthority().getDescription());
+                        
+            } catch (FaultMessage ex) {
+                Logger.getLogger(CIMIdentitiesClient.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
 
 
         n_nameBox.setText("");
@@ -629,7 +805,9 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
         nt_namecb.removeAllItems();
         nt_descb.removeAllItems();
         nta_namecb.removeAllItems();
-        nta_descb.removeAllItems();        
+        nta_descb.removeAllItems();
+        
+        populateComboBoxes();
     }//GEN-LAST:event_enterButtonActionPerformed
 
     /**
@@ -656,11 +834,7 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                try {
-                    new CIMIdentitiesClient().setVisible(true);
-                } catch (QueryCIMIdentitiesFaultMessage ex) {
-                    Logger.getLogger(CIMIdentitiesClient.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                new CIMIdentitiesClient().setVisible(true);
             }
         });
     }

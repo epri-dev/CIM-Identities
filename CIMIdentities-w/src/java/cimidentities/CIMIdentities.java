@@ -162,8 +162,6 @@ public class CIMIdentities {
             stmt.close();
             con.close();
             
-            JOptionPane.showMessageDialog( null, "Data modified" );
-            
             } catch(SQLException err){
                 value.setResult("FAILED");
                 JOptionPane.showMessageDialog( null, err.getMessage());
@@ -187,27 +185,17 @@ public class CIMIdentities {
         (ch.iec.tc57._2016.cimidentitiesmessage.CIMIdentitiesEventMessageType message) throws FaultMessage {
         ch.iec.tc57._2016.cimidentitiesmessage.CIMIdentitiesResponseMessageType response = new ch.iec.tc57._2016.cimidentitiesmessage.CIMIdentitiesResponseMessageType();
         ReplyType value = new ReplyType();
-        //String result = value.getResult();
         value.setResult("OK");
         
         //set response header/payload/reply
         response.setHeader(message.getHeader());
         response.setPayload(message.getPayload());
         response.setReply(value);
+        mRID = response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getIdentifiedObject().getMRID();
         
         try {
-
-            ArrayList<CIMIdentity> cim = (ArrayList<CIMIdentity>) response.getPayload().getCIMIdentities().getCIMIdentity();
-            mRID = cim.get(0).getIdentifiedObject().getMRID();
-            NName = cim.get(0).getNames().get(0).getName();
-            NTName = cim.get(0).getNames().get(0).getNameType().getName();
-            NTDes = cim.get(0).getNames().get(0).getNameType().getDescription();
-            NTAName = cim.get(0).getNames().get(0).getNameType().getNameTypeAuthority().getName();
-            NTADes = cim.get(0).getNames().get(0).getNameType().getNameTypeAuthority().getDescription();
             Connection con = DriverManager.getConnection(host, uName, password);
             Statement stmt = con.createStatement();
-        
-            //to-do:  Add error checking if "Randomly Generate" is selected
         
             String delUUID = "DELETE FROM public.\"Identity\" WHERE id_pkey = '" +
                             mRID + "'";
@@ -216,8 +204,7 @@ public class CIMIdentities {
         
             stmt.close();
             con.close();
-        
-            JOptionPane.showMessageDialog( null, "Data deleted" );
+            
             } catch(SQLException err){
                 value.setResult("FAILED");
                 JOptionPane.showMessageDialog( null, err.getMessage());

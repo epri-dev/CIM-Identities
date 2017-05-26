@@ -263,7 +263,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="n_nameActionPerformed"/>
               </Events>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="n_name.addItem(&quot;&quot;);&#xd;&#xa;LinkedHashSet&lt;String&gt; nameSet = new LinkedHashSet&lt;String&gt;();&#xd;&#xa;for (int i = 0; i &lt; responseSize; i++) {&#xd;&#xa;    nameSet.add(response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getName());&#xd;&#xa;}&#xd;&#xa;for (String entry : nameSet) {&#xd;&#xa;        n_name.addItem(entry);&#xd;&#xa;}&#xd;&#xa;"/>
+                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="LinkedHashSet&lt;String&gt; nameSet = new LinkedHashSet&lt;String&gt;();&#xd;&#xa;for (int i = 0; i &lt; responseSize; i++) {&#xd;&#xa;    nameSet.add(response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getName());&#xd;&#xa;}&#xd;&#xa;for (String entry : nameSet) {&#xd;&#xa;        n_name.addItem(entry);&#xd;&#xa;}&#xd;&#xa;"/>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
             </Component>
