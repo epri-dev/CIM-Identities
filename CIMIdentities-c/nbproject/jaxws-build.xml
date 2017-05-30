@@ -31,7 +31,7 @@
     </target>
     <target name="wsimport-client-clean-SendCIMIdentities" depends="-init-project">
         <delete dir="${build.generated.dir}/jax-wsCache/SendCIMIdentities"/>
-        <delete dir="${build.generated.sources.dir}/jax-ws/ch/iec/tc57/2016/sendcimidentities"/>
+        <delete dir="${build.generated.sources.dir}/jax-ws/ch/iec/tc57/_2016/sendcimidentities"/>
     </target>
     <target name="wsimport-client-QueryCIMIdentities" depends="wsimport-init">
         <mkdir dir="${build.generated.dir}/jax-wsCache/QueryCIMIdentities"/>

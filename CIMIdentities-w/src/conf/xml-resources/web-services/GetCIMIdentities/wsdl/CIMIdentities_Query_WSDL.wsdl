@@ -56,7 +56,7 @@
 	</wsdl:binding>
 	<wsdl:service name="QueryCIMIdentities">
 		<wsdl:port name="QueryCIMIdentities_Port" binding="tns:QueryCIMIdentities_Binding">
-			<soap:address location="http://144.58.246.143:9090/CIMIdentities-w/QueryCIMIdentities"/>
+			<soap:address location="http://144.58.246.143:8081/CIMIdentitiesWebApp/GetCIMIdentities"/>
 		</wsdl:port>
 	</wsdl:service>
 	

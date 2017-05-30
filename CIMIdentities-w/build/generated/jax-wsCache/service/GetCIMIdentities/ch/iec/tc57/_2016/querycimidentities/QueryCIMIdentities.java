@@ -17,7 +17,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "QueryCIMIdentities", targetNamespace = "http://iec.ch/TC57/2016/QueryCIMIdentities", wsdlLocation = "file:/C:/Users/pdlo003/Documents/NetBeansProjects/CIMIdentities-w/src/conf/xml-resources/web-services/GetCIMIdentities/wsdl/CIMIdentities_Query_WSDL.wsdl")
+@WebServiceClient(name = "QueryCIMIdentities", targetNamespace = "http://iec.ch/TC57/2016/QueryCIMIdentities", wsdlLocation = "file:/C:/Users/pdlo003/Documents/GitHub/CIM-Identities/CIMIdentities-w/src/conf/xml-resources/web-services/GetCIMIdentities/wsdl/CIMIdentities_Query_WSDL.wsdl")
 public class QueryCIMIdentities
     extends Service
 {
@@ -30,7 +30,7 @@ public class QueryCIMIdentities
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("file:/C:/Users/pdlo003/Documents/NetBeansProjects/CIMIdentities-w/src/conf/xml-resources/web-services/GetCIMIdentities/wsdl/CIMIdentities_Query_WSDL.wsdl");
+            url = new URL("file:/C:/Users/pdlo003/Documents/GitHub/CIM-Identities/CIMIdentities-w/src/conf/xml-resources/web-services/GetCIMIdentities/wsdl/CIMIdentities_Query_WSDL.wsdl");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }

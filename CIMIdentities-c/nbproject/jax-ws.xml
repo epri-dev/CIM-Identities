@@ -5,7 +5,7 @@
     <client name="SendCIMIdentities">
       <wsdl-url>http://localhost:9090/CIMIdentities-w/SendCIMIdentities?wsdl</wsdl-url>
       <local-wsdl-file>localhost_9090/CIMIdentities-w/SendCIMIdentities.wsdl</local-wsdl-file>
-      <package-name>ch.iec.tc57.2016.sendcimidentities</package-name>
+      <package-name>ch.iec.tc57._2016.sendcimidentities</package-name>
       <catalog-file>catalog.xml</catalog-file>
       <wsimport-options>
         <wsimport-option>

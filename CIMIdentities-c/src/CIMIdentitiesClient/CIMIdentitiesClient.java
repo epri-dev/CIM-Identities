@@ -87,6 +87,7 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
         } catch (QueryCIMIdentitiesFaultMessage ex) {
             Logger.getLogger(CIMIdentitiesClient.class.getName()).log(Level.SEVERE, null, ex);
         }
+        if (response.getPayload().getCIMIdentities().getCIMIdentity() != null)
         responseSize = response.getPayload().getCIMIdentities().getCIMIdentity().size();
     }
     

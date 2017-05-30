@@ -26,7 +26,11 @@ import javax.jws.WebService;
  *
  * @author pdlo003
  */
-@WebService(serviceName = "QueryCIMIdentities", portName = "QueryCIMIdentities_Port", endpointInterface = "ch.iec.tc57._2016.querycimidentities.QueryCIMIdentitiesPort", targetNamespace = "http://iec.ch/TC57/2016/QueryCIMIdentities", wsdlLocation = "WEB-INF/wsdl/GetCIMIdentities/CIMIdentities_Query_WSDL.wsdl")
+@WebService(serviceName = "QueryCIMIdentities", 
+        portName = "QueryCIMIdentities_Port",
+        endpointInterface = "ch.iec.tc57._2016.querycimidentities.QueryCIMIdentitiesPort",
+        targetNamespace = "http://iec.ch/TC57/2016/QueryCIMIdentities", 
+        wsdlLocation = "WEB-INF/wsdl/GetCIMIdentities/CIMIdentities_Query_WSDL.wsdl")
 public class GetCIMIdentities {
     String mRID;
     String NName;
@@ -34,7 +38,7 @@ public class GetCIMIdentities {
     String NTDes;
     String NTAName;
     String NTADes;
-    String host = "jdbc:postgresql://localhost:5432/CIMIdentity";
+    String host = "jdbc:postgresql://144.58.246.143:5432/CIMIdentity";
     String uName = "postgres";
     String password = "epri97!!";
 
