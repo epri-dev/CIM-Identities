@@ -21,6 +21,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import javax.jws.WebService;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -149,6 +150,7 @@ public class GetCIMIdentities {
            
         } catch(Exception err){
                 value.setResult("FAILED");
+                JOptionPane.showMessageDialog(null, err.getMessage());
                 err.printStackTrace();
         }
         response.setReply(value);

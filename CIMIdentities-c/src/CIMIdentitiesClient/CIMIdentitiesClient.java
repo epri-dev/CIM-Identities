@@ -20,6 +20,7 @@ import com.epri._2016.cimidentities.IdentifiedObject;
 import com.epri._2016.cimidentities.Name;
 import com.epri._2016.cimidentities.NameType;
 import com.epri._2016.cimidentities.NameTypeAuthority;
+import java.awt.Graphics;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -85,6 +86,7 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
         try {
             response = queryCIMIdentities(message);
         } catch (QueryCIMIdentitiesFaultMessage ex) {
+            JOptionPane.showMessageDialog( null, ex.getMessage() );
             Logger.getLogger(CIMIdentitiesClient.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (response.getPayload().getCIMIdentities().getCIMIdentity() != null)
@@ -93,7 +95,20 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
     
     public void createTable() {
         curPage = Integer.parseInt(curPageBox.getText());
+        if (numRowsBox.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Number of rows field is empty\nPlease input desired value");
+            return;
+        }
         numRows = Integer.parseInt(numRowsBox.getText());
+        if (!totalPageBox.getText().equals("")) {
+            totalPage = Integer.parseInt(totalPageBox.getText());
+            if (curPage > totalPage) {
+                JOptionPane.showMessageDialog(null, "Invalid page number\n");
+                curPage = totalPage;
+                curPageBox.setText(Integer.toString(curPage));
+                createTable();
+            }
+        }
         int index = 0;
         DefaultTableModel Model = new DefaultTableModel();
         Object[] colName = new Object[6];
@@ -268,6 +283,11 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jTabbedPane1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jTabbedPane1.setAutoscrolls(true);
+        jTabbedPane1.setMinimumSize(new java.awt.Dimension(588, 600));
+        jTabbedPane1.setOpaque(true);
+
         jLabel1.setText("Name");
 
         jLabel2.setText("Select Name");
@@ -438,7 +458,7 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(enter_uuidBox, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(gen_uuidSel))
-                .addContainerGap(140, Short.MAX_VALUE))
+                .addContainerGap(165, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -567,6 +587,8 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Data Entry", jPanel1);
 
+        jPanel2.setMinimumSize(new java.awt.Dimension(550, 600));
+
         dataTable.setModel(model);
         jScrollPane3.setViewportView(dataTable);
 
@@ -634,19 +656,28 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 545, Short.MAX_VALUE)
+                            .addComponent(jScrollPane3)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(prev)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(prev)
+                                        .addGap(69, 69, 69)
+                                        .addComponent(jLabel12)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(curPageBox, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel13)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(totalPageBox, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(refreshButton))
                                 .addGap(69, 69, 69)
-                                .addComponent(jLabel12)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(curPageBox, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel13)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(totalPageBox, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(next))))
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(csvExport)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 94, Short.MAX_VALUE))
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(next)
+                                        .addGap(0, 0, Short.MAX_VALUE))))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(16, 16, 16)
                         .addComponent(jLabel14)
@@ -654,29 +685,22 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
                         .addComponent(numRowsBox, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(refreshButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(csvExport)
-                .addGap(19, 19, 19))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(prev)
-                        .addComponent(next))
+                    .addComponent(prev)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel12)
                         .addComponent(curPageBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel13)
-                        .addComponent(totalPageBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
+                        .addComponent(totalPageBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(next)))
+                .addGap(42, 42, 42)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel14)
                     .addComponent(numRowsBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -695,14 +719,14 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 704, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -811,7 +835,24 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
     }//GEN-LAST:event_n_nameActionPerformed
 
     private void curPageBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_curPageBoxActionPerformed
+        try {
+            
+        Integer.parseInt(curPageBox.getText());
+        
+        if (Integer.parseInt(curPageBox.getText()) < 1) {
+            throw new Exception("Value must be 1 or greater");
+        }
+        
+        if (Integer.parseInt(curPageBox.getText()) > Integer.parseInt(totalPageBox.getText())) {
+            throw new Exception("Current page cannot be greater than max page number\n");
+        }
+        
         createTable();
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(null, "Invalid value\n" + ex.getMessage());
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
     }//GEN-LAST:event_curPageBoxActionPerformed
 
     private void csvExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_csvExportActionPerformed
@@ -840,12 +881,22 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
                 
                 
             } catch (IOException ex) {
+                JOptionPane.showMessageDialog( null, ex.getMessage() );
                 Logger.getLogger(CIMIdentitiesClient.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_csvExportActionPerformed
 
     private void prevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevActionPerformed
+        if (numRowsBox.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Number of rows field is empty\nPlease input desired value");
+            return;
+        }
+        
+        if (Integer.parseInt(curPageBox.getText()) <= 1) {
+            return;
+        }
+        
         if ( Integer.parseInt( curPageBox.getText() ) != 1 ) {
                 curPage -= 1;
                 curPageBox.setText(Integer.toString(curPage));
@@ -854,6 +905,10 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
     }//GEN-LAST:event_prevActionPerformed
 
     private void nextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextActionPerformed
+        if (numRowsBox.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Number of rows field is empty\nPlease input desired value");
+            return;
+        }
         if ( Integer.parseInt( curPageBox.getText() ) != Integer.parseInt( totalPageBox.getText()) ) {
                 curPage += 1;
                 curPageBox.setText(Integer.toString(curPage));
@@ -862,7 +917,21 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
     }//GEN-LAST:event_nextActionPerformed
 
     private void numRowsBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_numRowsBoxActionPerformed
-        createTable();
+
+        try {
+            Integer.parseInt(numRowsBox.getText());
+            //curPageBox.setText("1");
+            //curPage = 1;
+            if (Integer.parseInt(numRowsBox.getText()) < 1) {
+                throw new Exception("Cannot have less than 1 row per page\n");
+            }
+            createTable();
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(null, "Invalid format\n" + ex.getMessage());
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+        
     }//GEN-LAST:event_numRowsBoxActionPerformed
 
     private void totalPageBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_totalPageBoxActionPerformed
@@ -950,6 +1019,7 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
                  + "\nNameTypeAuthority Name: " +  msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getNameTypeAuthority().getName() 
                  + "\nNameTypeAuthority Description: " + msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getNameTypeAuthority().getDescription());
             } catch (FaultMessage ex) {
+                JOptionPane.showMessageDialog( null, ex.getMessage() );
                 Logger.getLogger(CIMIdentitiesClient.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -1022,6 +1092,7 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
             try {
                 response = queryCIMIdentities(message);
             } catch (QueryCIMIdentitiesFaultMessage ex) {
+                JOptionPane.showMessageDialog( null, ex.getMessage() );
                 Logger.getLogger(CIMIdentitiesClient.class.getName()).log(Level.SEVERE, null, ex);
             }
             try {
@@ -1042,6 +1113,7 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
                  + "\nNew NameTypeAuthority Description: " + msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getNameTypeAuthority().getDescription());
                         
             } catch (FaultMessage ex) {
+                JOptionPane.showMessageDialog( null, ex.getMessage() );
                 Logger.getLogger(CIMIdentitiesClient.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -1077,12 +1149,16 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog( null, ex.getMessage() );
             java.util.logging.Logger.getLogger(CIMIdentitiesClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
+            JOptionPane.showMessageDialog( null, ex.getMessage() );
             java.util.logging.Logger.getLogger(CIMIdentitiesClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
+            JOptionPane.showMessageDialog( null, ex.getMessage() );
             java.util.logging.Logger.getLogger(CIMIdentitiesClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            JOptionPane.showMessageDialog( null, ex.getMessage() );
             java.util.logging.Logger.getLogger(CIMIdentitiesClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         /* Create and display the form */
@@ -1169,4 +1245,5 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
         ch.iec.tc57._2016.querycimidentities.QueryCIMIdentitiesPort port = service.getQueryCIMIdentitiesPort();
         return port.queryCIMIdentities(queryCIMIdentitiesRequestMessage);
     }
+    
 }

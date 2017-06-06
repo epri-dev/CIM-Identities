@@ -107,6 +107,7 @@ public class CIMIdentities {
                 
             } catch(SQLException err){
                 value.setResult("FAILED");
+                JOptionPane.showMessageDialog( null, err.getMessage() );
                 System.out.println(err.getMessage());
             }
         
