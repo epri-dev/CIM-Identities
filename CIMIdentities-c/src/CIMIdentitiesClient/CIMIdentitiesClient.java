@@ -20,7 +20,6 @@ import com.epri._2016.cimidentities.IdentifiedObject;
 import com.epri._2016.cimidentities.Name;
 import com.epri._2016.cimidentities.NameType;
 import com.epri._2016.cimidentities.NameTypeAuthority;
-import java.awt.Graphics;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
