@@ -5,7 +5,6 @@
  */
 package CIMWebService;
 
-import CIMIdentitiesClient.CIMIdentitiesClient;
 import ch.iec.tc57._2011.schema.message.HeaderType;
 import ch.iec.tc57._2016.cimidentitiesmessage.CIMIdentitiesPayloadType;
 import ch.iec.tc57._2016.cimidentitiesmessage.CIMIdentitiesResponseMessageType;
@@ -23,11 +22,8 @@ import com.epri._2016.cimidentities_.NameType;
 import com.epri._2016.cimidentities_.NameTypeAuthority;
 import static java.lang.System.out;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -50,6 +46,24 @@ public class CIMWebService {
     String nta_nameNew = "";
     String nta_desNew = "";
     String newUUID = "";
+    
+    public void printData(int i, CIMIdentitiesQueriesResponseMessageType db) {
+        out.println("<tr><td>");
+        out.println(i + 1);
+        out.println("</td><td>");
+        out.println(db.getPayload().getCIMIdentities().getCIMIdentity().get(i).getIdentifiedObject().getMRID());
+        out.println("</td><td>");
+        out.println(db.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getName());
+        out.println("</td><td>");
+        out.println(db.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getName());
+        out.println("</td><td>");
+        out.println(db.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getDescription());
+        out.println("</td><td>");
+        out.println(db.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getNameTypeAuthority().getName());
+        out.println("</td><td>");
+        out.println(db.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getNameTypeAuthority().getDescription());
+        out.println("</td></tr>");
+    }
     
     //Method name:  createResponse()
     //Parameters:  None
@@ -77,7 +91,6 @@ public class CIMWebService {
             response = queryCIMIdentities(message);
         } catch (QueryCIMIdentitiesFaultMessage ex) {
             JOptionPane.showMessageDialog( null, ex.getMessage() );
-            Logger.getLogger(CIMIdentitiesClient.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (response.getPayload().getCIMIdentities().getCIMIdentity() != null)
         responseSize = response.getPayload().getCIMIdentities().getCIMIdentity().size();
@@ -85,12 +98,40 @@ public class CIMWebService {
         
     }
     
+     public CIMIdentitiesQueriesResponseMessageType getCIM() {
+        HeaderType header = new HeaderType();
+        header.setNoun("CIMIdentities");
+        header.setVerb("get");
+        
+        CIMIdentitiesQueriesRequestType request = new CIMIdentitiesQueriesRequestType();
+        CIMIdentitiesQueries var = new CIMIdentitiesQueries();
+        EndDeviceGroup edg = new EndDeviceGroup();
+        edg.setMRID(null);  //can be null, '?', or '""' to receive all data, else set mRID
+        
+        
+        message.setRequest(request);
+        message.getRequest().setCIMIdentitiesQueries(var);
+        message.getRequest().getCIMIdentitiesQueries().getEndDeviceGroup().add(0, edg);
+        message.getRequest().getCIMIdentitiesQueries().getEndDeviceGroup();
+      
+        message.setHeader(header);
+        
+        try {
+            response = queryCIMIdentities(message);
+        } catch (QueryCIMIdentitiesFaultMessage ex) {
+            JOptionPane.showMessageDialog( null, ex.getMessage() );
+        }
+        
+        return response;
+     }
+    
     //Method: fillNameCB
     //Parameters:  None
     //Purpose: Creates an alphabetized list of all entries in the database for the Names Combo Box
     public Set<String> fillNameCB() {
         Set<String> nameSet = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
         for (int i = 0; i < responseSize; i++) {
+            if (!response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getName().trim().equals(""))
             nameSet.add(response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getName());
         }
         return nameSet;
@@ -99,6 +140,7 @@ public class CIMWebService {
     public Set<String> fillNTNameCB() {
         Set<String> nameTypeTSet = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
         for (int i = 0; i < responseSize; i++) {
+            if (!response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getName().trim().equals("")) 
             nameTypeTSet.add(response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getName().trim());
         }
         return nameTypeTSet;
@@ -107,6 +149,7 @@ public class CIMWebService {
     public Set<String> fillNTDesCB() {
         Set<String> nameTypeDesTSet = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
         for (int i = 0; i < responseSize; i++) {
+            if (!response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getDescription().trim().equals(""))
             nameTypeDesTSet.add(response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getDescription().trim());
         }
         return nameTypeDesTSet;
@@ -115,6 +158,7 @@ public class CIMWebService {
     public Set<String> fillNTANameCB() {
         Set<String> nameTypeAuthTSet = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
         for (int i = 0; i < responseSize; i++) {
+            if (!response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getNameTypeAuthority().getName().trim().equals(""))
             nameTypeAuthTSet.add(response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getNameTypeAuthority().getName().trim());
         }
         return nameTypeAuthTSet;
@@ -123,6 +167,7 @@ public class CIMWebService {
     public Set<String> fillNTADesCB() {
         Set<String> nameTypeAuthDesTSet = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
         for (int i = 0; i < responseSize; i++) {
+            if (!response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getNameTypeAuthority().getDescription().trim().equals(""))
             nameTypeAuthDesTSet.add(response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getNameTypeAuthority().getDescription().trim());
         }
         return nameTypeAuthDesTSet;

@@ -94,8 +94,4 @@ public class CIMIdentity {
         return this.names;
     }
 
-    public void setIdentifiedObject(com.epri._2016.cimidentities.IdentifiedObject value) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
 }
