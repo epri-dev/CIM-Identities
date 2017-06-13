@@ -34,3 +34,6 @@ Contains the following subdirectories:
 
 ### CIMIdentities-c
 * This is the client application for CIMIdentities-w.  It contains a launchable executable behave similarly to the DataEntryFrom application.  By setting the appropriate URL in place of localhost and maintaining a deployed web service, this can be accessed from any Internet-connected device.
+
+### CIMIdentitiesJSP
+* Similar to WebDataEntry, this is the SOAP version.  Meant to be viewed in a web browser.
