@@ -19,6 +19,16 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="addons/jquery-latest.js"></script>
+        <script src="addons/jquery.tablesorter.js"></script>
+        <script type="text/javascript" src="addons/jquery.tablesorter.pager.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() { 
+            $("table") 
+            .tablesorter({widthFixed: true, widgets: ['zebra']}) 
+            .tablesorterPager({container: $("#pager")}); 
+            }); 
+        </script>
         <style>
             td {
                 padding-left: 6px;
@@ -53,16 +63,19 @@
     <div class="col-sm-8 text-left">
         <h1>CIM Database Entries</h1>
         <form method="post">
-    <table border="6">
+    <table border="6" class="tablesorter">
+        <thead>
     <tr>
-        <td><strong>entry</strong></td>
-        <td><strong>UUID</strong></td>
-        <td><strong>Name</strong></td>
-        <td><strong>NameType Name</strong></td>
-        <td><strong>NameType Description</strong></td>
-        <td><strong>NameTypeAuthority Name</strong></td>
-        <td><strong>NameTypeAuthority Description</strong></td>
+        <th><strong>entry</strong></th>
+        <th><strong>UUID</strong></th>
+        <th><strong>Name</strong></th>
+        <th><strong>NameType Name</strong></th>
+        <th><strong>NameType Description</strong></th>
+        <th><strong>NameTypeAuthority Name</strong></th>
+        <th><strong>NameTypeAuthority Description</strong></th>
    </tr>
+        </thead>
+        <tbody>
            <% 
            CIMWebService CIM = new CIMWebService();
            CIMIdentitiesQueriesResponseMessageType db = CIM.getCIM();
@@ -85,8 +98,30 @@
                out.println("</td></tr>");
            }  
            %>
+        </tbody>
     </table>
         </form> 
+        <div id="pager" class="pager">
+	<form>
+            <input type="button" value="First Page" class="first"/>
+		<input type="button" value="Previous" class="prev"/>
+		<input type="text" class="pagedisplay"/>
+		<input type="button" value="Next" class="next"/>
+		<input type="button" value="Last Page" class="last"/>
+		<select class="pagesize">
+			<option selected="selected"  value="10">10</option>
+			<option value="20">20</option>
+			<option value="30">30</option>
+			<option value="40">40</option>
+                        <option value="50">50</option>
+			<option value="60">60</option>
+			<option value="70">70</option>
+                        <option value="80">80</option>
+			<option value="90">90</option>
+			<option value="100">100</option>
+		</select>
+	</form>
+        </div>
     </div>
   </div>
   </div>

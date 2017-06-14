@@ -21,6 +21,16 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="addons/jquery-latest.js"></script>
+        <script src="addons/jquery.tablesorter.js"></script>
+        <script type="text/javascript" src="addons/jquery.tablesorter.pager.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() { 
+            $("table") 
+            .tablesorter({widthFixed: true, widgets: ['zebra']}) 
+            .tablesorterPager({container: $("#pager")}); 
+            }); 
+        </script>
     </head>
     <body>
         <nav class="navbar navbar-inverse">
@@ -71,15 +81,15 @@
         try {        
         
             
-        out.println("<table border=\"6\">");
-        out.println("<tr>");
+        out.println("<table border=\"6\" class=\"tablesorter\">");
+        out.println("<thead><tr>");
         out.println("<td><strong>entry</strong></td>");
         out.println("<td><strong>UUID</strong></td>");
         out.println("<td><strong>Name</strong></td>");
         out.println("<td><strong>NameType Name</strong></td>");
         out.println("<td><strong>NameType Description</strong></td>");
         out.println("<td><strong>NameTypeAuthority Name</strong></td>");
-        out.println("<td><strong>NameTypeAuthority Description</strong></td></tr>");
+        out.println("<td><strong>NameTypeAuthority Description</strong></td></tr></thead><tbody>");
         
         CIMWebService CIM = new CIMWebService();
         CIMIdentitiesQueriesResponseMessageType db = CIM.getCIM();
@@ -215,12 +225,45 @@
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }  
-                
+        out.println("</tbody>");        
         out.println("</table>");       
         %>      
         </fieldset>
         </form>  
-        
+        <script>
+            var inputs = document.querySelectorAll('input[type="text"]');
+            for (var i = 0; i < inputs.length; i++) {
+                var input = inputs[i];
+                input.addEventListener('input', function() {
+                if (this.value == "") {
+                    this.previousElementSibling.checked = false;
+                } else {
+                    this.previousElementSibling.checked = true;
+                }
+                });
+            }
+        </script>
+        <div id="pager" class="pager">
+	<form>
+            <input type="button" value="First Page" class="first"/>
+		<input type="button" value="Previous" class="prev"/>
+		<input type="text" class="pagedisplay"/>
+		<input type="button" value="Next" class="next"/>
+		<input type="button" value="Last Page" class="last"/>
+		<select class="pagesize">
+			<option selected="selected"  value="10">10</option>
+			<option value="20">20</option>
+			<option value="30">30</option>
+			<option value="40">40</option>
+                        <option value="50">50</option>
+			<option value="60">60</option>
+			<option value="70">70</option>
+                        <option value="80">80</option>
+			<option value="90">90</option>
+			<option value="100">100</option>
+		</select>
+	</form>
+        </div>
     </div>
   </div>
   </div>
