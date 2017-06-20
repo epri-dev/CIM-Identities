@@ -4,6 +4,7 @@
     Author     : pdlo003
 --%>
 
+<%@page import="ch.iec.tc57._2016.cimidentitiesqueriesmessage.CIMIdentitiesQueriesResponseMessageType"%>
 <%@page import="java.util.Set"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.sql.*"%>
@@ -102,11 +103,9 @@
       <p><a href="https://github.com/epri-dev/CIM-Identities">Github: Source Code</a></p>
     </div>
     <div class="col-sm-4 text-left">
-        <h1>Enter Data for CIM Database </h1>
-        
         <form name="myForm" action="index.jsp" method="POST">   
             <fieldset>
-                <legend><strong>Name:</strong></legend>
+                <legend><strong>Name</strong></legend>
                 Name <br>
                  <input class="des" type="text" name="n_nameBox" id="n_nameBox" placeholder="Name">
                  <select name="n_name" onchange="chooseName(this)">
@@ -127,7 +126,7 @@
                  </select><br><br></fieldset>
         
             <fieldset>
-                <legend><strong>Name Type:</strong></legend>
+                <legend><strong>Name Type</strong></legend>
             Name<br>
             <input type="text" name="nt_nameBox" id="nt_nameBox" placeholder="Name">
             <select name="nt_name" onchange="chooseNameType(this)">
@@ -163,7 +162,7 @@
                     %> 
             </select><br><br></fieldset>
             <fieldset>
-                <legend><strong>Name Type Authority:</strong></legend>
+                <legend><strong>Name Type Authority</strong></legend>
                 Name<br>
                 <input type="text" name="nta_nameBox" id="nta_nameBox" placeholder="Name">
                 <select name="nta_name" onchange="chooseNTA(this)">
@@ -201,14 +200,14 @@
             </fieldset>
         <fieldset id="uuidEnt">
                 <input type="radio" name ="uuidEnt" value ="random" checked="checked"> Randomly Generate UUID<br>
-                <input type="radio" name="uuidEnt" value="enter"> Enter UUID Here:
-                <input type="text" name="enter_uuidBox" placeholder="0c2cdd47-8695-43f4-8e9a-1712d26da12f"><br><br>
+                <input type="radio" id="enterUUID" name="uuidEnt" value="enter"> Enter UUID Here:
+                <input type="text" id="uuidBox" name="enter_uuidBox" oninput="fillPage()"><br><br>
         </fieldset>
         
         <fieldset id="dbAction">
                 <input type="radio" name="dbAction" value="insert" checked="checked"> Insert<br>
-                <input type="radio" name="dbAction" value="modify"> Modify<br>
-                <input type="radio" name="dbAction" value="delete"> Delete<br><br>
+                <input type="radio" name="dbAction" value="modify" onchange="buttonCheck()"> Modify<br>
+                <input type="radio" name="dbAction" value="delete" onchange="buttonCheck()"> Delete<br><br>
         </fieldset>
                 
         <fieldset>    
@@ -233,6 +232,11 @@
             window.onload = function() {
             document.getElementById("n_nameBox").focus();
             };
+            
+            function buttonCheck() {
+                document.getElementById("enterUUID").checked = true;
+            }
+            
             function chooseName(input) {
                 document.getElementById("n_nameBox").value = input.value;
             }
@@ -247,6 +251,41 @@
             }
             function chooseNTADes(input) {
                 document.getElementById("nta_desBox").value = input.value;
+            }
+            
+            <% CIMWebService data = new CIMWebService();
+               CIMIdentitiesQueriesResponseMessageType db = data.getCIM();
+                
+            %> 
+            cim_dict = { <%
+                for (int i = 0; i < db.getPayload().getCIMIdentities().getCIMIdentity().size(); i++) {
+                    %>'<%
+                    out.print(db.getPayload().getCIMIdentities().getCIMIdentity().get(i).getIdentifiedObject().getMRID().trim());
+                    %>':['<%
+                    out.print(db.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getName().trim());
+                    %>', '<%
+                    out.print(db.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getName().trim());
+                    %>', '<%
+                    out.print(db.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getDescription().trim());
+                    %>', '<%
+                    out.print(db.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getNameTypeAuthority().getName().trim());
+                    %>', '<%
+                    out.print(db.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getNameTypeAuthority().getDescription().trim());
+                    %>']<%
+                    if (i != db.getPayload().getCIMIdentities().getCIMIdentity().size() - 1) out.println(", ");
+                }
+            %>};
+            
+            function fillPage() {
+            buttonCheck();
+            var id = String(document.getElementById("uuidBox").value);
+            id.trim();
+            document.getElementById("n_nameBox").value = cim_dict[id][0];
+            document.getElementById("nt_nameBox").value = cim_dict[id][1];
+            document.getElementById("nt_desBox").value = cim_dict[id][2];
+            document.getElementById("nta_nameBox").value = cim_dict[id][3];
+            document.getElementById("nta_desBox").value = cim_dict[id][4];
+            
             }
             // -->
             </SCRIPT>
