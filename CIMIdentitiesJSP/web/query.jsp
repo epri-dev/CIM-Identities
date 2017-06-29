@@ -45,7 +45,7 @@
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
-        <li><a href="index.jsp">Enter Data</a></li>
+        <li><a href="DataEntry.jsp">Enter Data</a></li>
         <li><a href="viewDB.jsp">View Database</a></li>
         <li class="active"><a href="query.jsp">Query</a></li>
     </div>
