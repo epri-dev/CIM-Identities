@@ -33,7 +33,7 @@ public class CIMIdentities {
     String NTDes;
     String NTAName;
     String NTADes;
-    String host = "jdbc:postgresql://144.58.246.143:5432/CIMIdentity";
+    String host = "jdbc:postgresql://localhost:5432/CIMIdentity";
     String uName = "postgres";
     String password = "epri97!!";
  

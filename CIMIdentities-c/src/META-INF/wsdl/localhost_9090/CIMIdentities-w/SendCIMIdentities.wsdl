@@ -117,7 +117,7 @@
 	</wsdl:binding>
 	<wsdl:service name="SendCIMIdentities">
 		<wsdl:port name="CIMIdentities_Port" binding="tns:CIMIdentities_Binding">
-			<soap:address location="http://144.58.246.143:9090/CIMIdentities-w/SendCIMIdentities"/>
+			<soap:address location="http://localhost:9090/CIMIdentities-w/SendCIMIdentities"/>
 		</wsdl:port>
 	</wsdl:service>
 </wsdl:definitions>
