@@ -41,7 +41,7 @@ public class GetCIMIdentities {
     String NTADes;
     String host = "jdbc:postgresql://localhost:5432/CIMIdentity";
     String uName = "postgres";
-    String password = "epri97!!";
+    String password = "";
 
     public ch.iec.tc57._2016.cimidentitiesqueriesmessage.CIMIdentitiesQueriesResponseMessageType queryCIMIdentities
         (ch.iec.tc57._2016.cimidentitiesqueriesmessage.CIMIdentitiesQueriesRequestMessageType message) 
@@ -94,13 +94,14 @@ public class GetCIMIdentities {
            Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
            ResultSet rs = stmt.executeQuery(query);
            
+           
           
            int size = 0;
            if (rs != null) {
                rs.beforeFirst();
                rs.last();
                size = rs.getRow();
-           } 
+            
            rs.beforeFirst();
            
            CIMIdentities cimIDs = new CIMIdentities();
@@ -142,25 +143,51 @@ public class GetCIMIdentities {
                 names.get(0).getNameType().setNameTypeAuthority(nameTypeAuthority);
 
                 i++;
-           }
+            }
            rs.close();
            stmt.close();
            conn.close();
+           } else {
+               CIMIdentities cimIDs = new CIMIdentities();
+               payload.setCIMIdentities(cimIDs);
+               ArrayList<CIMIdentity> cim = (ArrayList<CIMIdentity>) payload.getCIMIdentities().getCIMIdentity();
+               cim.ensureCapacity(size); 
+               
+               CIMIdentity cimid = new CIMIdentity();
+                IdentifiedObject idObj = new IdentifiedObject();
+                Name name = new Name();
+                cim.add(0, cimid);
+                
+                List<Name> names = cim.get(0).getNames();
+                NameType nameType = new NameType();
+                NameTypeAuthority nameTypeAuthority = new NameTypeAuthority();
+               
+               
+                //set the mRID
+                idObj.setMRID(rs.getString(""));
+                cim.get(0).setIdentifiedObject(idObj);
+            
+                names.add(0, name);
+                name.setName(rs.getString(""));
+                names.get(0).setName(name.getName());
+               
+                nameType.setName(rs.getString(""));
+                nameType.setDescription(rs.getString(""));
+                names.get(0).setNameType(nameType);
+                
+                nameTypeAuthority.setName(rs.getString(""));
+                nameTypeAuthority.setDescription(rs.getString(""));
+                names.get(0).getNameType().setNameTypeAuthority(nameTypeAuthority);
+           }
            response.setPayload(payload);
            
         } catch(Exception err){
-                value.setResult("FAILED");
-                StringWriter sw = new StringWriter();
-                PrintWriter pw = new PrintWriter(sw);
-                err.printStackTrace(pw);
-                value.getError().get(0).setDetails(sw.toString());
-                response.setReply(value);
-                return response;
+            value.setResult("Failed");
+            err.printStackTrace();
         }
         response.setReply(value);
         
         return response;
-        //throw new UnsupportedOperationException("Not implemented yet.");
     }
     
 }

@@ -22,7 +22,7 @@
         </wsimport-option>
         <wsimport-option>
           <wsimport-option-name>wsdlLocation</wsimport-option-name>
-          <wsimport-option-value>http://localhost:9090/CIMIdentities-w/SendCIMIdentities?wsdl</wsimport-option-value>
+          <wsimport-option-value>http://localhost:8080/CIMIdentities-w/SendCIMIdentities?WSDL</wsimport-option-value>
         </wsimport-option>
         <wsimport-option>
           <wsimport-option-name>xnocompile</wsimport-option-name>
@@ -54,7 +54,7 @@
         </wsimport-option>
         <wsimport-option>
           <wsimport-option-name>wsdlLocation</wsimport-option-name>
-          <wsimport-option-value>http://localhost:9090/CIMIdentities-w/QueryCIMIdentities?wsdl</wsimport-option-value>
+          <wsimport-option-value>http://localhost:8080/CIMIdentities-w/QueryCIMIdentities?WSDL</wsimport-option-value>
         </wsimport-option>
         <wsimport-option>
           <wsimport-option-name>xnocompile</wsimport-option-name>

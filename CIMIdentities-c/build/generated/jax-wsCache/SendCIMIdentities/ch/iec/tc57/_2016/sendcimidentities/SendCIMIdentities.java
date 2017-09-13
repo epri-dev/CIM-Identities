@@ -17,7 +17,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "SendCIMIdentities", targetNamespace = "http://iec.ch/TC57/2016/SendCIMIdentities", wsdlLocation = "http://localhost:9090/CIMIdentities-w/SendCIMIdentities?wsdl")
+@WebServiceClient(name = "SendCIMIdentities", targetNamespace = "http://iec.ch/TC57/2016/SendCIMIdentities", wsdlLocation = "http://localhost:8080/CIMIdentities-w/SendCIMIdentities?WSDL")
 public class SendCIMIdentities
     extends Service
 {
@@ -30,7 +30,7 @@ public class SendCIMIdentities
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("http://localhost:9090/CIMIdentities-w/SendCIMIdentities?wsdl");
+            url = new URL("http://localhost:8080/CIMIdentities-w/SendCIMIdentities?WSDL");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }

@@ -28,7 +28,7 @@
     </target>
     <target name="wsimport-client-SendCIMIdentities" depends="wsimport-init">
         <mkdir dir="${build.generated.dir}/jax-wsCache/SendCIMIdentities"/>
-        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/SendCIMIdentities" destdir="${build.generated.dir}/jax-wsCache/SendCIMIdentities" wsdl="${basedir}/${conf-dir}xml-resources/web-service-references/SendCIMIdentities/wsdl/localhost_9090/CIMIdentities-w/SendCIMIdentities.wsdl" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://localhost:9090/CIMIdentities-w/SendCIMIdentities?wsdl" xnocompile="true" xendorsed="true">
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/SendCIMIdentities" destdir="${build.generated.dir}/jax-wsCache/SendCIMIdentities" wsdl="${basedir}/${conf-dir}xml-resources/web-service-references/SendCIMIdentities/wsdl/localhost_9090/CIMIdentities-w/SendCIMIdentities.wsdl" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://localhost:8080/CIMIdentities-w/SendCIMIdentities?WSDL" xnocompile="true" xendorsed="true">
             <depends file="${basedir}/${conf-dir}xml-resources/web-service-references/SendCIMIdentities/wsdl/localhost_9090/CIMIdentities-w/SendCIMIdentities.wsdl"/>
             <produces dir="${build.generated.dir}/jax-wsCache/SendCIMIdentities"/>
         </wsimport>
@@ -44,7 +44,7 @@
     </target>
     <target name="wsimport-client-QueryCIMIdentities" depends="wsimport-init">
         <mkdir dir="${build.generated.dir}/jax-wsCache/QueryCIMIdentities"/>
-        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/QueryCIMIdentities" destdir="${build.generated.dir}/jax-wsCache/QueryCIMIdentities" wsdl="${basedir}/${conf-dir}xml-resources/web-service-references/QueryCIMIdentities/wsdl/localhost_9090/CIMIdentities-w/QueryCIMIdentities.wsdl" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://localhost:9090/CIMIdentities-w/QueryCIMIdentities?wsdl" xnocompile="true" xendorsed="true">
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/QueryCIMIdentities" destdir="${build.generated.dir}/jax-wsCache/QueryCIMIdentities" wsdl="${basedir}/${conf-dir}xml-resources/web-service-references/QueryCIMIdentities/wsdl/localhost_9090/CIMIdentities-w/QueryCIMIdentities.wsdl" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://localhost:8080/CIMIdentities-w/QueryCIMIdentities?WSDL" xnocompile="true" xendorsed="true">
             <depends file="${basedir}/${conf-dir}xml-resources/web-service-references/QueryCIMIdentities/wsdl/localhost_9090/CIMIdentities-w/QueryCIMIdentities.wsdl"/>
             <produces dir="${build.generated.dir}/jax-wsCache/QueryCIMIdentities"/>
         </wsimport>

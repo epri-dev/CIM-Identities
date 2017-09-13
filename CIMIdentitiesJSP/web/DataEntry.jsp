@@ -12,7 +12,6 @@
 <%@page import="javax.servlet.http.HttpServlet"%>
 <%@page import="javax.servlet.http.HttpServletRequest"%>
 <%@page import="javax.servlet.http.HttpServletResponse"%>
-<% Class.forName("org.postgresql.Driver"); %>
 <!DOCTYPE html>
 <html>  
     <head>

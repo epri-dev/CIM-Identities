@@ -95,7 +95,7 @@ public class CIMWebService {
         try {
             response = queryCIMIdentities(message);
         } catch (QueryCIMIdentitiesFaultMessage ex) {
-            JOptionPane.showMessageDialog( null, ex.getMessage() );
+            out.println(ex.getMessage() );
         }
         if (response.getPayload().getCIMIdentities().getCIMIdentity() != null)
         responseSize = response.getPayload().getCIMIdentities().getCIMIdentity().size();

@@ -36,7 +36,7 @@ public class CIMIdentities {
     String NTADes;
     String host = "jdbc:postgresql://localhost:5432/CIMIdentity";
     String uName = "postgres";
-    String password = "epri97!!";
+    String password = "";
  
 
     public ch.iec.tc57._2016.cimidentitiesmessage.CIMIdentitiesResponseMessageType createdCIMIdentitiesRequest

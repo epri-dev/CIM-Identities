@@ -4,7 +4,7 @@
         *** TO CHANGE TARGETS GENERATED TO jaxws-build.xml COPY THOSE             ***
         *** TARGETS TO ../build.xml AND MODIFY THAT FILE INSTEAD                  ***
 
-        --><project xmlns:xalan="http://xml.apache.org/xslt" xmlns:j2seproject3="http://www.netbeans.org/ns/j2se-project/3" xmlns:jaxws="http://www.netbeans.org/ns/jax-ws/1">
+        --><project xmlns:j2seproject3="http://www.netbeans.org/ns/j2se-project/3" xmlns:xalan="http://xml.apache.org/xslt" xmlns:jaxws="http://www.netbeans.org/ns/jax-ws/1">
     <!--
                 ===================
                 JAX-WS WSIMPORT SECTION
@@ -19,7 +19,7 @@
     <target name="wsimport-client-SendCIMIdentities" depends="wsimport-init">
         <mkdir dir="${build.generated.dir}/jax-wsCache/SendCIMIdentities"/>
         <property name="wsdl-SendCIMIdentities" location="xml-resources/web-service-references/SendCIMIdentities/wsdl/localhost_9090/CIMIdentities-w/SendCIMIdentities.wsdl"/>
-        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/SendCIMIdentities" destdir="${build.generated.dir}/jax-wsCache/SendCIMIdentities" wsdl="${wsdl-SendCIMIdentities}" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://localhost:9090/CIMIdentities-w/SendCIMIdentities?wsdl" xnocompile="true" xendorsed="true">
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/SendCIMIdentities" destdir="${build.generated.dir}/jax-wsCache/SendCIMIdentities" wsdl="${wsdl-SendCIMIdentities}" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://localhost:8080/CIMIdentities-w/SendCIMIdentities?WSDL" xnocompile="true" xendorsed="true">
             <depends file="${wsdl-SendCIMIdentities}"/>
             <produces dir="${build.generated.dir}/jax-wsCache/SendCIMIdentities"/>
         </wsimport>
@@ -36,7 +36,7 @@
     <target name="wsimport-client-QueryCIMIdentities" depends="wsimport-init">
         <mkdir dir="${build.generated.dir}/jax-wsCache/QueryCIMIdentities"/>
         <property name="wsdl-QueryCIMIdentities" location="xml-resources/web-service-references/QueryCIMIdentities/wsdl/localhost_9090/CIMIdentities-w/QueryCIMIdentities.wsdl"/>
-        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/QueryCIMIdentities" destdir="${build.generated.dir}/jax-wsCache/QueryCIMIdentities" wsdl="${wsdl-QueryCIMIdentities}" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://localhost:9090/CIMIdentities-w/QueryCIMIdentities?wsdl" xnocompile="true" xendorsed="true">
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/QueryCIMIdentities" destdir="${build.generated.dir}/jax-wsCache/QueryCIMIdentities" wsdl="${wsdl-QueryCIMIdentities}" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://localhost:8080/CIMIdentities-w/QueryCIMIdentities?WSDL" xnocompile="true" xendorsed="true">
             <depends file="${wsdl-QueryCIMIdentities}"/>
             <produces dir="${build.generated.dir}/jax-wsCache/QueryCIMIdentities"/>
         </wsimport>
