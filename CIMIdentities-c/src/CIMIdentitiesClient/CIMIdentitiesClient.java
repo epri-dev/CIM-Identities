@@ -1046,13 +1046,15 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
             try {
                 response = queryCIMIdentities(message);
             } catch (QueryCIMIdentitiesFaultMessage ex) {
-                Logger.getLogger(CIMIdentitiesClient.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, ex.getMessage());
             }
             
             /* set outgoing deletion message to contain ALL data about the mRID */
             msg.getPayload().setCIMIdentities(response.getPayload().getCIMIdentities());
             
             try {
+                
+                if (response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getIdentifiedObject().getMRID() == null) throw new IndexOutOfBoundsException("mRID doesn't exist");
                 deletedCIMIdentitiesRequest(msg);
                 JOptionPane.showMessageDialog( null,
                 "Data deleted:\n\n"
@@ -1066,6 +1068,8 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
             } catch (FaultMessage ex) {
                 JOptionPane.showMessageDialog( null, ex.getMessage() );
                 Logger.getLogger(CIMIdentitiesClient.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IndexOutOfBoundsException err) {
+                JOptionPane.showMessageDialog(null, "No deletion made.\nUUID does not currently exist in the database.\n");
             }
         }
         
@@ -1095,6 +1099,7 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
                 Logger.getLogger(CIMIdentitiesClient.class.getName()).log(Level.SEVERE, null, ex);
             }
             try {
+                if (response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getIdentifiedObject().getMRID() == null) throw new IndexOutOfBoundsException("mRID doesn't exist");
                 changedCIMIdentitiesRequest(msg);
                 JOptionPane.showMessageDialog( null,
                 "Data modified:\n\n"
@@ -1114,6 +1119,8 @@ public class CIMIdentitiesClient extends javax.swing.JFrame {
             } catch (FaultMessage ex) {
                 JOptionPane.showMessageDialog( null, ex.getMessage() );
                 Logger.getLogger(CIMIdentitiesClient.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IndexOutOfBoundsException err) {
+                JOptionPane.showMessageDialog(null, "No modification made.\nUUID does not currently exist in the database.\n");
             }
         }
 

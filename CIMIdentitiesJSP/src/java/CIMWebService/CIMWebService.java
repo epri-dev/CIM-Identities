@@ -6,6 +6,7 @@
 package CIMWebService;
 
 import ch.iec.tc57._2011.schema.message.HeaderType;
+import ch.iec.tc57._2011.schema.message.ReplyType;
 import ch.iec.tc57._2016.cimidentitiesmessage.CIMIdentitiesPayloadType;
 import ch.iec.tc57._2016.cimidentitiesmessage.CIMIdentitiesResponseMessageType;
 import ch.iec.tc57._2016.cimidentitiesqueries_.CIMIdentitiesQueries;
@@ -20,10 +21,14 @@ import com.epri._2016.cimidentities_.IdentifiedObject;
 import com.epri._2016.cimidentities_.Name;
 import com.epri._2016.cimidentities_.NameType;
 import com.epri._2016.cimidentities_.NameTypeAuthority;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import static java.lang.System.out;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 /**
@@ -98,6 +103,27 @@ public class CIMWebService {
         
     }
     
+    public String csvExport() {
+            
+        try {
+                
+            String csv = "mRID, Name, NameType Name, NameType Description, NameTypeAuthority Name, NameTypeAuthority Description\n";
+            for (int i = 0; i < responseSize; i++) {
+                csv += response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getIdentifiedObject().getMRID() + ", " +
+                response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getName() + ", " +
+                response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getName() + ", " +
+                response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getDescription() + ", " +
+                response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getNameTypeAuthority().getName() + ", " +
+                response.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getNameTypeAuthority().getDescription() + "\n";
+                    
+            }
+            return csv;
+            
+            } catch (Exception ex) {
+                return ex.getMessage();
+            }
+    }
+    
      public CIMIdentitiesQueriesResponseMessageType getCIM() {
         HeaderType header = new HeaderType();
         header.setNoun("CIMIdentities");
@@ -119,7 +145,7 @@ public class CIMWebService {
         try {
             response = queryCIMIdentities(message);
         } catch (QueryCIMIdentitiesFaultMessage ex) {
-            JOptionPane.showMessageDialog( null, ex.getMessage() );
+            out.println(ex.getMessage());
         }
         
         return response;
@@ -176,9 +202,9 @@ public class CIMWebService {
     //Method name:  submitData
     //Parameters:  n_nameNew, nt_nameNew, nt_desNew, nta_nameNew, nta_desNew, mRID, action, gen_uuidSel
     //Purpose:  Submits data for either insertion, deletion, or modification
-    public int submitData(String n_nameNew, String nt_nameNew, String nt_desNew, String nta_nameNew, String nta_desNew, String mRID, String action, boolean gen_uuidSel) {
+    public String submitData(String n_nameNew, String nt_nameNew, String nt_desNew, String nta_nameNew, String nta_desNew, String mRID, String action, boolean gen_uuidSel) {
         ch.iec.tc57._2016.cimidentitiesmessage.CIMIdentitiesEventMessageType msg = new ch.iec.tc57._2016.cimidentitiesmessage.CIMIdentitiesEventMessageType();
- 
+        ch.iec.tc57._2016.cimidentitiesmessage.CIMIdentitiesResponseMessageType resp = new ch.iec.tc57._2016.cimidentitiesmessage.CIMIdentitiesResponseMessageType();
         CIMIdentitiesPayloadType payload = new CIMIdentitiesPayloadType();
         CIMIdentities cimids = new CIMIdentities();
         CIMIdentity cimid = new CIMIdentity();
@@ -190,6 +216,7 @@ public class CIMWebService {
         value.setMRID(mRID);
         cimid.setIdentifiedObject(value);
         
+        String error = new String();
         Name name = new Name();
         name.setName(n_nameNew);
         if (action.equals("delete")) name.setName("");
@@ -233,20 +260,23 @@ public class CIMWebService {
             header.setVerb("create");
             msg.setHeader(header);
             try {
-                createdCIMIdentitiesRequest(msg);
-                out.println("Data inserted:\n\n"
-                 + "\nName: " +  msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getName()
-                 + "\nNameType Name: " +  msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getName() 
-                 + "\nNameType Description: " + msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getDescription() 
-                 + "\nNameTypeAuthority Name: " +  msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getNameTypeAuthority().getName() 
-                 + "\nNameTypeAuthority Description: " + msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getNameTypeAuthority().getDescription());
+                resp = createdCIMIdentitiesRequest(msg);
+                String confirmation = "Data inserted:<br>"
+                 + "<br><strong>Name:</strong> " +  resp.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getName()
+                 + "<br><strong>NameType Name:</strong> " +  resp.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getName() 
+                 + "<br><strong>NameType Description:</strong> " + resp.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getDescription() 
+                 + "<br><strong>NameTypeAuthority Name:</strong> " +  resp.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getNameTypeAuthority().getName() 
+                 + "<br><strong>NameTypeAuthority Description:</strong> " + resp.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getNameTypeAuthority().getDescription()
+                 + "<br><strong>mRID:</strong>  " + resp.getPayload().getCIMIdentities().getCIMIdentity().get(0).getIdentifiedObject().getMRID();
+                return confirmation;
             } catch (FaultMessage ex) {
-                out.println(ex.getMessage());
+                resp.getReply().getError().get(0).setDetails(ex.getMessage());
+                return resp.getReply().getError().get(0).getDetails();
             }
         }
         
         /* deletion handling */
-        if (action.equals("delete") && gen_uuidSel == true) {
+        else if (action.equals("delete") && gen_uuidSel == true) {
             uuidEntered = true;
             HeaderType header = new HeaderType();
             header.setNoun("CIMIdentities");
@@ -268,30 +298,34 @@ public class CIMWebService {
             try {
                 response = queryCIMIdentities(message);
             } catch (QueryCIMIdentitiesFaultMessage ex) {
-                out.println(ex.getMessage());
+                return ex.getMessage();
             }
             
             /* set outgoing deletion message to contain ALL data about the mRID */
             msg.getPayload().setCIMIdentities(response.getPayload().getCIMIdentities());
             
             try {
+                if (response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getIdentifiedObject().getMRID() == null) throw new IndexOutOfBoundsException("mRID doesn't exist");
                 deletedCIMIdentitiesRequest(msg);
-                out.println(
-                "Data deleted:\n\n"
-                 + "mRID: " + response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getIdentifiedObject().getMRID()
-                 + "\nName: " +  response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getName()
-                 + "\nNameType Name: " +  response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getName() 
-                 + "\nNameType Description: " + response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getDescription() 
-                 + "\nNameTypeAuthority Name: " +  response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getNameTypeAuthority().getName() 
-                 + "\nNameTypeAuthority Description: " + response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getNameTypeAuthority().getDescription());
-                        
+                String confirmation = "Data deleted:<br>"
+                 + "<br><strong>mRID:</strong> " + response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getIdentifiedObject().getMRID()
+                 + "<br><strong>Name:</strong> " +  response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getName()
+                 + "<br><strong>NameType Name:</strong> " +  response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getName() 
+                 + "<br><strong>NameType Description:</strong> " + response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getDescription() 
+                 + "<br><strong>NameTypeAuthority Name:</strong> " +  response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getNameTypeAuthority().getName() 
+                 + "<br><strong>NameTypeAuthority Description:</strong> " + response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getNameTypeAuthority().getDescription();
+                
+                return confirmation;
             } catch (FaultMessage ex) {
-                out.println(ex.getMessage());
+                error = ex.getMessage();
+                return error;
+            } catch (IndexOutOfBoundsException err) {
+                return "<p style=\"color:red\"><strong>No deletion made.<br>Provided UUID does not currently exist in the database</strong>.<br>Please double check input UUID.<br>";
             }
         }
         
          /* modification handling */
-        if (action.equals("modify")) {
+        else if (action.equals("modify")) {
             HeaderType header = new HeaderType();
             header.setNoun("CIMIdentities");
             header.setVerb("change");
@@ -312,30 +346,40 @@ public class CIMWebService {
             try {
                 response = queryCIMIdentities(message);
             } catch (QueryCIMIdentitiesFaultMessage ex) {
-                out.println(ex.getMessage());
+                return response.getReply().getError().get(0).getDetails();
             }
+                        
             try {
+                
+                if (response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getIdentifiedObject().getMRID() == null) throw new IndexOutOfBoundsException("mRID doesn't exist");
                 changedCIMIdentitiesRequest(msg);
-                out.println(
-                "Data modified:\n\n"
-                 + "mRID: " + msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getIdentifiedObject().getMRID()
-                 + "\nPrevious Name: " + response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getName()  
-                 + "\nPrevious NameType Name: " + response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getName()   
-                 + "\nPrevious NameType Description: " + response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getDescription()  
-                 + "\nPrevoius NameTypeAuthority Name: " + response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getNameTypeAuthority().getName()    
-                 + "\nPrevious NameTypeAuthority Description: " + response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getNameTypeAuthority().getDescription()
-                        
-                 + "\n\n\nNew Name: " +  msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getName()                 
-                 + "\nNew NameType Name: " +  msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getName()                       
-                 + "\nNew NameType Description: " + msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getDescription()                  
-                 + "\nNew NameTypeAuthority Name: " +  msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getNameTypeAuthority().getName()                  
-                 + "\nNew NameTypeAuthority Description: " + msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getNameTypeAuthority().getDescription());
-                        
+                String confirmation = "Data modified:<br>"
+                 + "<strong>Previous data:</strong><br>"        
+                 + "<br><strong>mRID:</strong> " + response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getIdentifiedObject().getMRID()
+                 + "<br><strong>Name:</strong> " + response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getName()  
+                 + "<br><strong>NameType Name:</strong> " + response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getName()   
+                 + "<br><strong>NameType Description:</strong> " + response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getDescription()  
+                 + "<br><strong>NameTypeAuthority Name:</strong> " + response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getNameTypeAuthority().getName()    
+                 + "<br><strong>NameTypeAuthority Description:</strong> " + response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getNameTypeAuthority().getDescription()
+                     
+                 + "<br><br><br><strong>New data:</strong><br>" 
+                 + "<br><strong>Name:</strong> " +  msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getName()                 
+                 + "<br><strong>NameType Name:</strong> " +  msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getName()                       
+                 + "<br><strong>NameType Description:</strong> " + msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getDescription()                  
+                 + "<br><strong>NameTypeAuthority Name:</strong> " +  msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getNameTypeAuthority().getName()                  
+                 + "<br><strong>NameTypeAuthority Description:</strong> " + msg.getPayload().getCIMIdentities().getCIMIdentity().get(0).getNames().get(0).getNameType().getNameTypeAuthority().getDescription();
+                 
+                return confirmation;
             } catch (FaultMessage ex) {
-                out.println(ex.getMessage());
+                error = ex.getMessage();
+                return error;
+            } catch (IndexOutOfBoundsException err) {
+                return "<p style=\"color:red\"><strong>Provided UUID does not currently exist in the database</strong>.<br>Please double check input UUID.<br>";
             }
+            
         }
-        return 1;
+        
+        else return "Error:  Invalid response received.\n";
     }
     
     private static CIMIdentitiesResponseMessageType changedCIMIdentitiesRequest(ch.iec.tc57._2016.cimidentitiesmessage.CIMIdentitiesEventMessageType changedCIMIdentitiesEventMessage) throws FaultMessage {

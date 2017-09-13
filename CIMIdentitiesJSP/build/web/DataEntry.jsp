@@ -15,69 +15,45 @@
 <% Class.forName("org.postgresql.Driver"); %>
 <!DOCTYPE html>
 <html>  
-    
-     
     <head>
-        
-        
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Enter Data for CIM</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('#save').click(function ()
+                {
+                    $.ajax({
+                        type: "post",
+                        url: "confirmation.jsp",
+                        data: {
+                            n_nameBox: $('#n_nameBox').val(),
+                            nt_nameBox: $('#nt_nameBox').val(),
+                            nt_desBox: $('#nt_desBox').val(),
+                            nta_nameBox: $('#nta_nameBox').val(),
+                            nta_desBox: $('#nta_desBox').val(), 
+                            dbAction: $(".dbAction:checked").val(),
+                            uuidEnt: $('.uuidEnt:checked').val(),
+                            enterUUID: $('#enterUUID').val(),
+                            uuidBox: $('#uuidBox').val()
+                        },
+                        success: function(msg){
+                            $('#confirmation').empty();
+                            $('#confirmation').append(msg);
+                        }  
+                    });
+                }); 
+            });  
+        </script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <style>
             select {
                 width: 175px;
                 
             }
         </style>
-        
-         <%
-            int result = 0;
-            if (request.getParameter("enterData") != null) {
-                                 
-                String name = new String();
-                String ntName = new String();
-                String ntDesBox = new String();
-                String ntaName = new String();
-                String ntaDesBox = new String();
-                String uuidBox = new String();
-                boolean entUUID = false;
-                
-                String pick = request.getParameter("uuidEnt");
-                if (pick.equals("random")) {
-                    uuidBox = "";
-                    entUUID = false;
-                }
-                else if (pick.equals("enter")) {
-                    entUUID = true;
-                    uuidBox = request.getParameter("enter_uuidBox");
-                }
-               
-                
-                if (request.getParameter("n_nameBox") != null) {
-                    name = request.getParameter("n_nameBox");
-                }
-                if (request.getParameter("nt_nameBox") != null) {
-                    ntName = request.getParameter("nt_nameBox");
-                }
-                if (request.getParameter("nt_desBox") != null) {
-                    ntDesBox = request.getParameter("nt_desBox");
-                }
-                if (request.getParameter("nta_nameBox") != null) {
-                    ntaName = request.getParameter("nta_nameBox");
-                }
-                if (request.getParameter("nta_desBox") != null) {
-                    ntaDesBox = request.getParameter("nta_desBox");
-                }
-                /* instantiate the connection and move over the data */
-                CIMWebService cim = new CIMWebService();
-                result = cim.submitData(name, ntName, ntDesBox, ntaName, ntaDesBox, uuidBox, request.getParameter("dbAction"), entUUID);
-            }
-            
-
-                %>
     </head>  
     <body>
 <nav class="navbar navbar-inverse">
@@ -103,12 +79,11 @@
     <div class="col-sm-2 sidenav">
       <p><a href="https://github.com/epri-dev/CIM-Identities">Github: Source Code</a></p>
     </div>
-    <div class="col-sm-4 text-left">
-        <form name="myForm" action="DataEntry.jsp" method="POST">   
+    <div class="col-sm-4 text-left"> 
             <fieldset>
                 <legend><strong>Name</strong></legend>
                 Name <br>
-                 <input class="des" type="text" name="n_nameBox" id="n_nameBox" placeholder="Name">
+                 <input type="text" name="n_nameBox" id="n_nameBox" placeholder="Name"/>
                  <select name="n_name" onchange="chooseName(this)">
                      <option value=""></option>
                     <%
@@ -129,7 +104,7 @@
             <fieldset>
                 <legend><strong>Name Type</strong></legend>
             Name<br>
-            <input type="text" name="nt_nameBox" id="nt_nameBox" placeholder="Name">
+            <input type="text" name="nt_nameBox" id="nt_nameBox" placeholder="Name"/>
             <select name="nt_name" onchange="chooseNameType(this)">
                 <option value=""></option>
                 <%  
@@ -146,7 +121,7 @@
                     %> 
             </select><br><br>
             Description<br>
-            <input type="text" name="nt_desBox" id="nt_desBox" placeholder="Description">
+            <input type="text" name="nt_desBox" id="nt_desBox" placeholder="Description"/>
             <select name="nt_des" onchange="chooseNTDes(this)">
                 <option value=""></option>
                  <%    
@@ -165,7 +140,7 @@
             <fieldset>
                 <legend><strong>Name Type Authority</strong></legend>
                 Name<br>
-                <input type="text" name="nta_nameBox" id="nta_nameBox" placeholder="Name">
+                <input type="text" name="nta_nameBox" id="nta_nameBox" placeholder="Name"/>
                 <select name="nta_name" onchange="chooseNTA(this)">
                     <option value=""></option>
                     <%    
@@ -182,7 +157,7 @@
                     %> 
                 </select><br><br>
                 Description<br>
-                <input type="text" name="nta_desBox" id="nta_desBox" placeholder="Description">
+                <input type="text" name="nta_desBox" id="nta_desBox" placeholder="Description"/>
                 <select name="nta_des" onchange="chooseNTADes(this)">
                     <option value=""></option>
                     <%    
@@ -200,36 +175,28 @@
                 </select><br><br>
             </fieldset>
         <fieldset id="uuidEnt">
-                <input type="radio" name ="uuidEnt" value ="random" checked="checked"> Randomly Generate UUID<br>
-                <input type="radio" id="enterUUID" name="uuidEnt" value="enter"> Enter UUID Here:
+                <input type="radio" class="uuidEnt" name ="uuidEnt" value ="random" checked="checked"> Randomly Generate UUID<br>
+                <input type="radio" class="uuidEnt" id="enterUUID" name="uuidEnt" value="enter"> Enter UUID Here:
                 <input type="text" id="uuidBox" name="enter_uuidBox" oninput="fillPage()"><br><br>
         </fieldset>
         
         <fieldset id="dbAction">
-                <input type="radio" name="dbAction" value="insert" checked="checked"> Insert<br>
-                <input type="radio" name="dbAction" value="modify" onchange="buttonCheck()"> Modify<br>
-                <input type="radio" name="dbAction" value="delete" onchange="buttonCheck()"> Delete<br><br>
+                <input type="radio" name="dbAction" class="dbAction" value="insert" checked="checked"> Insert<br>
+                <input type="radio" name="dbAction" class="dbAction" value="modify" onchange="buttonCheck()"> Modify<br>
+                <input type="radio" name="dbAction" class="dbAction" value="delete" onchange="buttonCheck()"> Delete<br><br>
         </fieldset>
                 
         <fieldset>    
-            <input type="hidden" name="hidden" value="<%= result %>" />
-            <input type="submit" value="Submit" name="enterData"> 
-            
-         </fieldset>
-        </form>
-            
+            <input type="button" value="save" name="save" id="save"/>   
+        </fieldset>              
     </div>
-            
+    <div class="col-xs-6 col-lg-4 text-left" id="confirmation"></div>      
   </div>
+              
   </div>
             <SCRIPT>
             <!--
-            function displayResults()
-            {
-                if (document.myForm.hidden.value === 1) {
-                    alert("Data inserted!");
-                }
-            }
+            
             window.onload = function() {
             document.getElementById("n_nameBox").focus();
             };

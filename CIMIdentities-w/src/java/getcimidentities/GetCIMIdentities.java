@@ -13,15 +13,15 @@ import com.epri._2016.cimidentities_.IdentifiedObject;
 import com.epri._2016.cimidentities_.Name;
 import com.epri._2016.cimidentities_.NameType;
 import com.epri._2016.cimidentities_.NameTypeAuthority;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import javax.jws.WebService;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -150,8 +150,12 @@ public class GetCIMIdentities {
            
         } catch(Exception err){
                 value.setResult("FAILED");
-                JOptionPane.showMessageDialog(null, err.getMessage());
-                err.printStackTrace();
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                err.printStackTrace(pw);
+                value.getError().get(0).setDetails(sw.toString());
+                response.setReply(value);
+                return response;
         }
         response.setReply(value);
         

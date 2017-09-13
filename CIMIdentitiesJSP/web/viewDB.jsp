@@ -122,7 +122,7 @@
                         <option value="250">250</option>
                         <option value="500">500</option>
                         <option value="1000">1000</option>
-		</select>
+                </select><br><br><br>
 	</form>
         </div>
     </div>

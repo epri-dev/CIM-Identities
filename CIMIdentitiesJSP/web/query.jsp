@@ -94,9 +94,9 @@
         CIMWebService CIM = new CIMWebService();
         CIMIdentitiesQueriesResponseMessageType db = CIM.getCIM();
         
-        if (request.getParameter("q").equals("Nname")) {
+        if (request.getParameter("q").equalsIgnoreCase("Nname")) {
             for (int i = 0; i <  db.getPayload().getCIMIdentities().getCIMIdentity().size(); i++) {
-                if (db.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getName().trim().equals(request.getParameter("nameBox").trim())) 
+                if (db.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getName().trim().equalsIgnoreCase(request.getParameter("nameBox").trim())) 
                 {
                      out.println("<tr><td>");
                      out.println(i + 1);
@@ -115,9 +115,9 @@
                      out.println("</td></tr>");
                 }  else continue;
             }
-        } else if (request.getParameter("q").equals("mRID")) {
+        } else if (request.getParameter("q").equalsIgnoreCase("mRID")) {
             for (int i = 0; i <  db.getPayload().getCIMIdentities().getCIMIdentity().size(); i++) {
-                if (db.getPayload().getCIMIdentities().getCIMIdentity().get(i).getIdentifiedObject().getMRID().equals(request.getParameter("uuidBox").trim())) 
+                if (db.getPayload().getCIMIdentities().getCIMIdentity().get(i).getIdentifiedObject().getMRID().equalsIgnoreCase(request.getParameter("uuidBox").trim())) 
                 {
                      out.println("<tr><td>");
                      out.println(i + 1);
@@ -136,9 +136,9 @@
                      out.println("</td></tr>");
                 }  else continue;
             }
-        } else if (request.getParameter("q").equals("NTname")) {
+        } else if (request.getParameter("q").equalsIgnoreCase("NTname")) {
             for (int i = 0; i <  db.getPayload().getCIMIdentities().getCIMIdentity().size(); i++) {
-                if (db.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getName().equals(request.getParameter("NTnameBox").trim())) 
+                if (db.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getName().equalsIgnoreCase(request.getParameter("NTnameBox").trim())) 
                 {
                      out.println("<tr><td>");
                      out.println(i + 1);
@@ -157,9 +157,9 @@
                      out.println("</td></tr>");
                 }  else continue;
             }
-        } else if (request.getParameter("q").equals("NTdes")) {
+        } else if (request.getParameter("q").equalsIgnoreCase("NTdes")) {
             for (int i = 0; i <  db.getPayload().getCIMIdentities().getCIMIdentity().size(); i++) {
-                if (db.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getDescription().equals(request.getParameter("NTdesBox").trim())) 
+                if (db.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getDescription().equalsIgnoreCase(request.getParameter("NTdesBox").trim())) 
                 {
                      out.println("<tr><td>");
                      out.println(i + 1);
@@ -178,9 +178,9 @@
                      out.println("</td></tr>");
                 }  else continue;
             }
-        } else if (request.getParameter("q").equals("NTAname")) {
+        } else if (request.getParameter("q").equalsIgnoreCase("NTAname")) {
             for (int i = 0; i <  db.getPayload().getCIMIdentities().getCIMIdentity().size(); i++) {
-                if (db.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getNameTypeAuthority().getName().equals(request.getParameter("NTAnameBox").trim())) 
+                if (db.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getNameTypeAuthority().getName().equalsIgnoreCase(request.getParameter("NTAnameBox").trim())) 
                 {
                      out.println("<tr><td>");
                      out.println(i + 1);
@@ -199,9 +199,9 @@
                      out.println("</td></tr>");
                 }  else continue;
             }
-        } else if (request.getParameter("q").equals("NTAdes")) {
+        } else if (request.getParameter("q").equalsIgnoreCase("NTAdes")) {
             for (int i = 0; i <  db.getPayload().getCIMIdentities().getCIMIdentity().size(); i++) {
-                if (db.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getNameTypeAuthority().getDescription().equals(request.getParameter("NTAdesBox").trim())) 
+                if (db.getPayload().getCIMIdentities().getCIMIdentity().get(i).getNames().get(0).getNameType().getNameTypeAuthority().getDescription().equalsIgnoreCase(request.getParameter("NTAdesBox").trim())) 
                 {
                      out.println("<tr><td>");
                      out.println(i + 1);

@@ -8,6 +8,8 @@ package cimidentities;
 import ch.iec.tc57._2011.schema.message.ReplyType;
 import ch.iec.tc57._2016.sendcimidentities.FaultMessage;
 import com.epri._2016.cimidentities_.CIMIdentity;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -15,7 +17,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import javax.jws.WebService;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -105,16 +106,18 @@ public class CIMIdentities {
                 stmt.close();
                 con.close();
                 
+                return response;
+                
             } catch(SQLException err){
                 value.setResult("FAILED");
-                JOptionPane.showMessageDialog( null, err.getMessage() );
-                System.out.println(err.getMessage());
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                err.printStackTrace(pw);
+                value.getError().get(0).setDetails(sw.toString());
+                response.setReply(value);
+                return response;
             }
-        
-        return response;
 
-        //TODO implement this method
-        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     public ch.iec.tc57._2016.cimidentitiesmessage.CIMIdentitiesResponseMessageType changedCIMIdentitiesRequest
@@ -162,12 +165,16 @@ public class CIMIdentities {
             
             stmt.close();
             con.close();
-            
+            return response;
             } catch(SQLException err){
                 value.setResult("FAILED");
-                JOptionPane.showMessageDialog( null, err.getMessage());
-            }    
-        return response;
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                err.printStackTrace(pw);
+                value.getError().get(0).setDetails(sw.toString());
+                response.setReply(value);
+                return response;
+            }   
     }
 
     public ch.iec.tc57._2016.cimidentitiesmessage.CIMIdentitiesResponseMessageType canceledCIMIdentitiesRequest
@@ -192,12 +199,11 @@ public class CIMIdentities {
         response.setHeader(message.getHeader());
         response.setPayload(message.getPayload());
         response.setReply(value);
-        mRID = response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getIdentifiedObject().getMRID();
         
         try {
             Connection con = DriverManager.getConnection(host, uName, password);
             Statement stmt = con.createStatement();
-        
+            mRID = response.getPayload().getCIMIdentities().getCIMIdentity().get(0).getIdentifiedObject().getMRID();
             String delUUID = "DELETE FROM public.\"Identity\" WHERE id_pkey = '" +
                             mRID + "'";
         
@@ -205,12 +211,17 @@ public class CIMIdentities {
         
             stmt.close();
             con.close();
+            return response;
             
             } catch(SQLException err){
                 value.setResult("FAILED");
-                JOptionPane.showMessageDialog( null, err.getMessage());
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                err.printStackTrace(pw);
+                value.getError().get(0).setDetails(sw.toString());
+                response.setReply(value);
+                return response;
             }
-        return response;
     }
     
 }
