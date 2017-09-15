@@ -40,7 +40,7 @@ public class CIMIdentities {
  
 
     public ch.iec.tc57._2016.cimidentitiesmessage.CIMIdentitiesResponseMessageType createdCIMIdentitiesRequest
-        (ch.iec.tc57._2016.cimidentitiesmessage.CIMIdentitiesEventMessageType message)  {
+        (ch.iec.tc57._2016.cimidentitiesmessage.CIMIdentitiesEventMessageType message) throws ClassNotFoundException  {
         ch.iec.tc57._2016.cimidentitiesmessage.CIMIdentitiesResponseMessageType response = new ch.iec.tc57._2016.cimidentitiesmessage.CIMIdentitiesResponseMessageType();
         //Event message type only contains the header/payload
         //Response message type contains header/payload/reply
@@ -65,7 +65,7 @@ public class CIMIdentities {
         
         try {
                 
-              
+            Class.forName("org.postgresql.Driver"); 
             Connection con = DriverManager.getConnection(host, uName, password);
             Statement stmt = con.createStatement();
             

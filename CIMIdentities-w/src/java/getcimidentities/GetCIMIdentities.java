@@ -42,7 +42,7 @@ public class GetCIMIdentities {
     String host = "jdbc:postgresql://localhost:5432/CIMIdentity";
     String uName = "postgres";
     String password = "";
-
+    
     public ch.iec.tc57._2016.cimidentitiesqueriesmessage.CIMIdentitiesQueriesResponseMessageType queryCIMIdentities
         (ch.iec.tc57._2016.cimidentitiesqueriesmessage.CIMIdentitiesQueriesRequestMessageType message) 
                 throws QueryCIMIdentitiesFaultMessage {
@@ -89,7 +89,7 @@ public class GetCIMIdentities {
                        "nt.nt_pkey = nta.nta_pkey";
                        
             }
-           
+           Class.forName("org.postgresql.Driver");
            Connection conn = DriverManager.getConnection(host, uName, password);
            Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
            ResultSet rs = stmt.executeQuery(query);
