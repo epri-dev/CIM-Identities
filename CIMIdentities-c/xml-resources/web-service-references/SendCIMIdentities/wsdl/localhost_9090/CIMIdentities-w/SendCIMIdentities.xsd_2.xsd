@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI (http://jax-ws.java.net). RI's version is Metro/2.3.2-b608 (trunk-7979; 2015-01-21T12:50:19+0000) JAXWS-RI/2.2.11-b150120.1832 JAXWS-API/2.2.12 JAXB-RI/2.2.12-b141219.1637 JAXB-API/2.2.13-b141020.1521 svn-revision#unknown. --><xs:schema xmlns:tns="http://iec.ch/TC57/2016/CIMIdentitiesMessage" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msg="http://iec.ch/TC57/2011/schema/message" xmlns:obj="http://www.epri.com/2016/CIMIdentities#" targetNamespace="http://iec.ch/TC57/2016/CIMIdentitiesMessage" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0.0">
+  <!-- Base Message Definitions -->
+  <xs:import namespace="http://iec.ch/TC57/2011/schema/message" schemaLocation="http://localhost:9090/CIMIdentities-w/SendCIMIdentities?xsd=3"/>
+  <!-- CIM Information Object Definition -->
+  <xs:import namespace="http://www.epri.com/2016/CIMIdentities#" schemaLocation="http://localhost:9090/CIMIdentities-w/SendCIMIdentities?xsd=1"/>
+  <!-- PayloadType Definition -->
+  <xs:complexType name="CIMIdentitiesPayloadType">
+    <xs:sequence>
+      <xs:element ref="obj:CIMIdentities"/>
+      <xs:element name="OperationSet" type="msg:OperationSet" minOccurs="0"/>
+      <xs:element name="Compressed" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>For compressed and/or binary, uuencoded payloads</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Format" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Hint as to format of payload, e.g. XML, RDF, SVF, BINARY, PDF, ...</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- Message Types -->
+  <!-- RequestMessageType -->
+  <xs:complexType name="CIMIdentitiesRequestMessageType">
+    <xs:sequence>
+      <xs:element name="Header" type="msg:HeaderType"/>
+      <xs:element name="Request" type="msg:RequestType" minOccurs="0"/>
+      <xs:element name="Payload" type="tns:CIMIdentitiesPayloadType" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- ResponseMessageType -->
+  <xs:complexType name="CIMIdentitiesResponseMessageType">
+    <xs:sequence>
+      <xs:element name="Header" type="msg:HeaderType"/>
+      <xs:element name="Reply" type="msg:ReplyType"/>
+      <xs:element name="Payload" type="tns:CIMIdentitiesPayloadType" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- EventMessageType -->
+  <xs:complexType name="CIMIdentitiesEventMessageType">
+    <xs:sequence>
+      <xs:element name="Header" type="msg:HeaderType"/>
+      <xs:element name="Payload" type="tns:CIMIdentitiesPayloadType" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- FaultMessageType -->
+  <xs:complexType name="CIMIdentitiesFaultMessageType">
+    <xs:sequence>
+      <xs:element name="Reply" type="msg:ReplyType"/>
+    </xs:sequence>
+  </xs:complexType>
+    <xs:element name="CreateCIMIdentities" type="tns:CIMIdentitiesRequestMessageType"/>
+    <xs:element name="ChangeCIMIdentities" type="tns:CIMIdentitiesRequestMessageType"/>
+    <xs:element name="CancelCIMIdentities" type="tns:CIMIdentitiesRequestMessageType"/>
+    <xs:element name="CloseCIMIdentities" type="tns:CIMIdentitiesRequestMessageType"/>
+    <xs:element name="DeleteCIMIdentities" type="tns:CIMIdentitiesRequestMessageType"/>
+    <xs:element name="CreatedCIMIdentities" type="tns:CIMIdentitiesEventMessageType"/>
+    <xs:element name="ChangedCIMIdentities" type="tns:CIMIdentitiesEventMessageType"/>
+    <xs:element name="CanceledCIMIdentities" type="tns:CIMIdentitiesEventMessageType"/>
+    <xs:element name="ClosedCIMIdentities" type="tns:CIMIdentitiesEventMessageType"/>
+    <xs:element name="DeletedCIMIdentities" type="tns:CIMIdentitiesEventMessageType"/>
+    <xs:element name="CIMIdentitiesResponseMessage" type="tns:CIMIdentitiesResponseMessageType"/>
+    <xs:element name="CIMIdentitiesFaultMessage" type="tns:CIMIdentitiesFaultMessageType"/>
+</xs:schema>

@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI (http://jax-ws.java.net). RI's version is Metro/2.3.2-b608 (trunk-7979; 2015-01-21T12:50:19+0000) JAXWS-RI/2.2.11-b150120.1832 JAXWS-API/2.2.12 JAXB-RI/2.2.12-b141219.1637 JAXB-API/2.2.13-b141020.1521 svn-revision#unknown. --><!-- edited with XMLSpy v2016 rel. 4 (x64) (http://www.altova.com) by Chris Kardos (C.P. Kardos, Inc.) --><xs:schema xmlns:tns="http://iec.ch/TC57/2016/CIMIdentitiesQueriesMessage" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msg="http://iec.ch/TC57/2011/schema/message" xmlns:obj1="http://www.epri.com/2016/CIMIdentities#" xmlns:obj2="http://iec.ch/TC57/2016/CIMIdentitiesQueries#" targetNamespace="http://iec.ch/TC57/2016/CIMIdentitiesQueriesMessage" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0.0">
+	<!-- Base Message Definitions -->
+	<xs:import namespace="http://iec.ch/TC57/2011/schema/message" schemaLocation="http://localhost:9090/CIMIdentities-w/QueryCIMIdentities?xsd=4"/>
+	<!-- CIM Information Object Definition -->
+	<xs:import namespace="http://www.epri.com/2016/CIMIdentities#" schemaLocation="http://localhost:9090/CIMIdentities-w/QueryCIMIdentities?xsd=1"/>
+	<!-- Remove this Import if there is no "Get" Profile associated with this Object. -->
+	<xs:import namespace="http://iec.ch/TC57/2016/CIMIdentitiesQueries#" schemaLocation="http://localhost:9090/CIMIdentities-w/QueryCIMIdentities?xsd=2"/>
+	<!-- RequestType Definition -->
+	<xs:element name="CIMIdentitiesQueriesRequestMessage" type="tns:CIMIdentitiesQueriesRequestMessageType"/>
+	<xs:element name="CIMIdentitiesQueriesResponseMessage" type="tns:CIMIdentitiesQueriesResponseMessageType"/>
+	<xs:element name="CIMIdentitiesQueriesFaultMessage" type="tns:CIMIdentitiesQueriesFaultMessageType"/>
+	<xs:complexType name="CIMIdentitiesQueriesRequestMessageType">
+		<xs:sequence>
+			<xs:element name="Header" type="msg:HeaderType"/>
+			<xs:element name="Request" type="tns:CIMIdentitiesQueriesRequestType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CIMIdentitiesQueriesResponseMessageType">
+		<xs:sequence>
+			<!-- Remove this Element if there is no "Queries" Profile associated with this Object. -->
+			<xs:element name="Header" type="msg:HeaderType"/>
+			<xs:element name="Reply" type="msg:ReplyType"/>
+			<xs:element name="Payload" type="tns:CIMIdentitiesQueriesPayloadType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CIMIdentitiesQueriesFaultMessageType">
+		<xs:sequence>
+			<xs:element name="Reply" type="msg:ReplyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CIMIdentitiesQueriesRequestType">
+		<xs:sequence>
+			<xs:element name="StartTime" type="xs:dateTime" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Start time of interest</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EndTime" type="xs:dateTime" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>End time of interest</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Option" type="msg:OptionType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Request type specialization</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ID" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Object ID for request</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<!-- Remove this Element if there is no "Queries" Profile associated with this Object. -->
+			<xs:element ref="obj2:CIMIdentitiesQueries"/>
+			<xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>This can be a CIM profile defined as an XSD with a CIM-specific namespace</xs:documentation>
+				</xs:annotation>
+			</xs:any>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CIMIdentitiesQueriesResponseType">
+		<xs:sequence>
+			<xs:element name="Header" type="msg:HeaderType"/>
+			<xs:element name="Reply" type="msg:ReplyType"/>
+			<xs:element name="Payload" type="tns:CIMIdentitiesQueriesPayloadType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CIMIdentitiesQueriesPayloadType">
+		<xs:sequence>
+			<xs:element ref="obj1:CIMIdentities" minOccurs="0"/>
+			<xs:element name="OperationSet" type="msg:OperationSet" minOccurs="0"/>
+			<xs:element name="Compressed" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>For compressed and/or binary, uuencoded payloads</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Format" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Hint as to format of payload, e.g. XML, RDF, SVF, BINARY, PDF, ...</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
