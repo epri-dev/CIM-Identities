@@ -34,3 +34,7 @@ this can be accessed from any Internet-connected device, as long as the applicat
 * Meant to be viewed via web browser, this SOAP client can be hosted ona  single machine and access via web browser instead of downloaded onto each client.
 
 For additional testing, SOAPUI was used.
+
+### Check the Wiki
+
+If you're interested in some light reading about how this SOAP web service was greated, head over to the wiki for some explanations and other documentation on getting things running.
