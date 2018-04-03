@@ -17,7 +17,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "SendCIMIdentities", targetNamespace = "http://iec.ch/TC57/2016/SendCIMIdentities", wsdlLocation = "file:/Users/Daniel/GitHub/CIM-Identities/CIMIdentities-w/src/conf/xml-resources/web-services/CIMIdentities/wsdl/Send_Receive_Reply_CIMIdentities.wsdl")
+@WebServiceClient(name = "SendCIMIdentities", targetNamespace = "http://iec.ch/TC57/2016/SendCIMIdentities", wsdlLocation = "file:/Users/Daniel/Documents/CIM-Identities-fc0a1797f55c45c5655e24dae9adddd7cc27cc94/CIMIdentities-w/src/conf/xml-resources/web-services/CIMIdentities/wsdl/Send_Receive_Reply_CIMIdentities.wsdl")
 public class SendCIMIdentities
     extends Service
 {
@@ -30,7 +30,7 @@ public class SendCIMIdentities
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("file:/Users/Daniel/GitHub/CIM-Identities/CIMIdentities-w/src/conf/xml-resources/web-services/CIMIdentities/wsdl/Send_Receive_Reply_CIMIdentities.wsdl");
+            url = new URL("file:/Users/Daniel/Documents/CIM-Identities-fc0a1797f55c45c5655e24dae9adddd7cc27cc94/CIMIdentities-w/src/conf/xml-resources/web-services/CIMIdentities/wsdl/Send_Receive_Reply_CIMIdentities.wsdl");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }

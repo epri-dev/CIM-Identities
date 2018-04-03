@@ -13,10 +13,11 @@ import com.epri._2016.cimidentities_.IdentifiedObject;
 import com.epri._2016.cimidentities_.Name;
 import com.epri._2016.cimidentities_.NameType;
 import com.epri._2016.cimidentities_.NameTypeAuthority;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,11 @@ import javax.jws.WebService;
  *
  * @author pdlo003
  */
-@WebService(serviceName = "QueryCIMIdentities", portName = "QueryCIMIdentities_Port", endpointInterface = "ch.iec.tc57._2016.querycimidentities.QueryCIMIdentitiesPort", targetNamespace = "http://iec.ch/TC57/2016/QueryCIMIdentities", wsdlLocation = "WEB-INF/wsdl/GetCIMIdentities/CIMIdentities_Query_WSDL.wsdl")
+@WebService(serviceName = "QueryCIMIdentities", 
+        portName = "QueryCIMIdentities_Port",
+        endpointInterface = "ch.iec.tc57._2016.querycimidentities.QueryCIMIdentitiesPort",
+        targetNamespace = "http://iec.ch/TC57/2016/QueryCIMIdentities", 
+        wsdlLocation = "WEB-INF/wsdl/GetCIMIdentities/CIMIdentities_Query_WSDL.wsdl")
 public class GetCIMIdentities {
     String mRID;
     String NName;
@@ -34,18 +39,10 @@ public class GetCIMIdentities {
     String NTDes;
     String NTAName;
     String NTADes;
-    
-    static {
-        try {
-            Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException e) {
-            throw new IllegalStateException("QueryCIMIdentities is unable to load org.postgresql.Driver. Please check if you have proper PostgreSQL JDBC Driver jar on the classpath", e);
-        }
-    }
     String host = "jdbc:postgresql://localhost:5432/CIMIdentity";
     String uName = "postgres";
     String password = "epri18";
-
+    
     public ch.iec.tc57._2016.cimidentitiesqueriesmessage.CIMIdentitiesQueriesResponseMessageType queryCIMIdentities
         (ch.iec.tc57._2016.cimidentitiesqueriesmessage.CIMIdentitiesQueriesRequestMessageType message) 
                 throws QueryCIMIdentitiesFaultMessage {
@@ -92,10 +89,11 @@ public class GetCIMIdentities {
                        "nt.nt_pkey = nta.nta_pkey";
                        
             }
-           
+           Class.forName("org.postgresql.Driver");
            Connection conn = DriverManager.getConnection(host, uName, password);
            Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
            ResultSet rs = stmt.executeQuery(query);
+           
            
           
            int size = 0;
@@ -103,7 +101,7 @@ public class GetCIMIdentities {
                rs.beforeFirst();
                rs.last();
                size = rs.getRow();
-           } 
+            
            rs.beforeFirst();
            
            CIMIdentities cimIDs = new CIMIdentities();
@@ -145,20 +143,51 @@ public class GetCIMIdentities {
                 names.get(0).getNameType().setNameTypeAuthority(nameTypeAuthority);
 
                 i++;
-           }
+            }
            rs.close();
            stmt.close();
            conn.close();
+           } else {
+               CIMIdentities cimIDs = new CIMIdentities();
+               payload.setCIMIdentities(cimIDs);
+               ArrayList<CIMIdentity> cim = (ArrayList<CIMIdentity>) payload.getCIMIdentities().getCIMIdentity();
+               cim.ensureCapacity(size); 
+               
+               CIMIdentity cimid = new CIMIdentity();
+                IdentifiedObject idObj = new IdentifiedObject();
+                Name name = new Name();
+                cim.add(0, cimid);
+                
+                List<Name> names = cim.get(0).getNames();
+                NameType nameType = new NameType();
+                NameTypeAuthority nameTypeAuthority = new NameTypeAuthority();
+               
+               
+                //set the mRID
+                idObj.setMRID(rs.getString(""));
+                cim.get(0).setIdentifiedObject(idObj);
+            
+                names.add(0, name);
+                name.setName(rs.getString(""));
+                names.get(0).setName(name.getName());
+               
+                nameType.setName(rs.getString(""));
+                nameType.setDescription(rs.getString(""));
+                names.get(0).setNameType(nameType);
+                
+                nameTypeAuthority.setName(rs.getString(""));
+                nameTypeAuthority.setDescription(rs.getString(""));
+                names.get(0).getNameType().setNameTypeAuthority(nameTypeAuthority);
+           }
            response.setPayload(payload);
            
         } catch(Exception err){
-                value.setResult("FAILED");
-                err.printStackTrace();
+            value.setResult("Failed");
+            err.printStackTrace();
         }
         response.setReply(value);
         
         return response;
-        //throw new UnsupportedOperationException("Not implemented yet.");
     }
     
 }
