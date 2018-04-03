@@ -34,6 +34,14 @@ public class GetCIMIdentities {
     String NTDes;
     String NTAName;
     String NTADes;
+    
+    static {
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException("QueryCIMIdentities is unable to load org.postgresql.Driver. Please check if you have proper PostgreSQL JDBC Driver jar on the classpath", e);
+        }
+    }
     String host = "jdbc:postgresql://localhost:5432/CIMIdentity";
     String uName = "postgres";
     String password = "epri18";
